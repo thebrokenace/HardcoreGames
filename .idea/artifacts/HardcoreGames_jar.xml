@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="HardcoreGames:jar">
+    <output-path>$PROJECT_DIR$/../HardcoreGamesServer/plugins</output-path>
+    <root id="archive" name="HardcoreGames.jar">
+      <element id="module-output" name="HardcoreGames" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../spigot-maps-2.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../EffectLib-9.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../VirtualFurnace-1.0.0-Beta11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../FastBoard-1.1.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="LuckPerms-Bukkit-5.3.37">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../HardcoreGamesServer/plugins/LuckPerms-Bukkit-5.3.37.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

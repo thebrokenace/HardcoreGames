@@ -1,0 +1,14 @@
+main: Main.HardcoreGames
+name: HardcoreGames
+version: 1.0
+api-version: 1.16
+depend:
+  - LuckPerms
+  - Citizens
+  - Sentinel
+commands:
+  hardcoregames:
+    aliases: hg
+  kit:
+  help:
+  stats:
