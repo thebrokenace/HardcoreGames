@@ -35,9 +35,7 @@ public class Tarzan implements Listener {
             if (e.getEntity() instanceof Player) {
                 if (kitInfo.getPlayerKit((Player) e.getEntity()) == Kits.TARZAN) {
                     if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
-                       // Bukkit.broadcastMessage("tarzan feel on leaf");
                         if (((Player) e.getEntity()).getLocation().getBlock().getRelative(BlockFace.DOWN).getType().name().toLowerCase().contains("leaves")) {
-                            //Bukkit.broadcastMessage("leafed detected");
 
                             e.setCancelled(true);
                         }

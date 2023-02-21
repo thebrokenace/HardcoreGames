@@ -26,9 +26,7 @@ public class Cultivator implements Listener {
                         Sounds.cultivatorGrowTree(e.getPlayer().getLocation());
                 }
                 if (e.getPlayer().getInventory().getItemInMainHand().getType().name().toLowerCase().contains("seeds") || e.getPlayer().getInventory().getItemInMainHand().getType() == Material.POTATO || e.getPlayer().getInventory().getItemInMainHand().getType() == Material.CARROT) {
-                    //Bukkit.broadcastMessage("seeds in name");
                     if (e.getBlock().getBlockData() instanceof Ageable) {
-                        //Bukkit.broadcastMessage("placed seeds");
                         Ageable ageable = ((Ageable) e.getBlock().getBlockData());
                         ageable.setAge(ageable.getMaximumAge());
                         e.getBlock().setBlockData(ageable);

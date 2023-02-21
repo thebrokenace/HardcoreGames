@@ -110,7 +110,7 @@ public class Blink implements Listener {
             p.teleport(block.add(0,1,0));
             p.getLocation().getWorld().playEffect(p.getLocation(), Effect.ENDER_SIGNAL, 1);
             p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10f , 1);
-            p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1200, 1));
+            p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 600, 1));
             new BukkitRunnable() {
                 int time = 0;
                 @Override

@@ -18,7 +18,7 @@ public class Magma implements Listener {
     public void onHit (EntityDamageByEntityEvent e) {
         if (!e.isCancelled()) {
             if (game.isStarted()) {
-                if (e.getEntity() instanceof Player) {
+                if (e.getDamager() instanceof Player) {
                     Player ninja = (Player) e.getDamager();
                     Entity hit = e.getEntity();
                     if (kitInfo.getPlayerKit(ninja) == Kits.MAGMA) {
@@ -32,4 +32,6 @@ public class Magma implements Listener {
             }
         }
     }
+
+
 }

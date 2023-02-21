@@ -12,6 +12,8 @@ import Messages.Scoreboard;
 import Robots.NPCKilledHandler;
 import Robots.RobotTrait;
 import Util.Game;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.shanebeestudios.vf.api.FurnaceManager;
 import com.shanebeestudios.vf.api.RecipeManager;
 import com.shanebeestudios.vf.api.TileManager;
@@ -30,22 +32,30 @@ public class HardcoreGames extends JavaPlugin {
     private static HardcoreGames instance;
 
     private static LuckPerms luckPermsInstance;
+    private static ProtocolManager protocolManager;
 
     Recipes recipes = new Recipes();
     Game game = Game.getSharedGame();
     Config config = new Config();
     PlayerStats stats = PlayerStats.getStats();
+
     private VirtualFurnaceAPI virtualFurnaceAPI;
     private FurnaceManager furnaceManager;
     private RecipeManager recipeManager;
     private TileManager tileManager;
+    //private SkinsRestorerAPI skinsRestorerAPI;
+
     @Override
     public void onEnable() {
         instance = this;
+        protocolManager = ProtocolLibrary.getProtocolManager();
+
         this.virtualFurnaceAPI = new VirtualFurnaceAPI(this);
         this.recipeManager = virtualFurnaceAPI.getRecipeManager();
         this.furnaceManager = virtualFurnaceAPI.getFurnaceManager();
         this.tileManager = virtualFurnaceAPI.getTileManager();
+        //this.skinsRestorerAPI = SkinsRestorerAPI.getApi();
+
         registerRecipes();
         registerFuels();
 
@@ -167,9 +177,13 @@ public class HardcoreGames extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new Engineer(), this);
         this.getServer().getPluginManager().registerEvents(new Stand(), this);
         this.getServer().getPluginManager().registerEvents(new Launcher(), this);
-
-
-
+        this.getServer().getPluginManager().registerEvents(new Portal(), this);
+        this.getServer().getPluginManager().registerEvents(new Vulture(), this);
+        this.getServer().getPluginManager().registerEvents(new Plague(), this);
+        this.getServer().getPluginManager().registerEvents(new Imposter(), this);
+        this.getServer().getPluginManager().registerEvents(new Peanut(), this);
+        this.getServer().getPluginManager().registerEvents(new Bridger(), this);
+        this.getServer().getPluginManager().registerEvents(new Timelord(), this);
 
 
         //robots
@@ -194,6 +208,7 @@ public class HardcoreGames extends JavaPlugin {
 
         super.onEnable();
     }
+    //public SkinsRestorerAPI getSkinsRestorerAPI () {return  skinsRestorerAPI;}
     public VirtualFurnaceAPI getVirtualFurnaceAPI() {
         return virtualFurnaceAPI;
     }
@@ -226,6 +241,9 @@ public class HardcoreGames extends JavaPlugin {
     public static HardcoreGames getInstance() {
         return instance;
     }
+
+    public static ProtocolManager getProtocolManager() { return protocolManager;};
+
 
     public static LuckPerms getLuckPermsInstance() {return luckPermsInstance;}
 

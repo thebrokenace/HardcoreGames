@@ -23,8 +23,8 @@ public class Poseidon implements Listener {
                     //p.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 30, 1));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 30, 99));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 30, 0));
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 30, 0));
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 30, 1));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 30, 1));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 30, 0));
 
                 }
             }

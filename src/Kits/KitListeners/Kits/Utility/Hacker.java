@@ -6,9 +6,8 @@ import Main.HardcoreGames;
 import Util.Game;
 import Util.GamePhase;
 import Util.Sounds;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import me.libraryaddict.disguise.DisguiseAPI;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -126,16 +125,22 @@ public class Hacker implements Listener {
                 Player pl = (Player) e;
                 if (p != pl) {
                     kitList.put(pl, kitInfo.getPlayerKit(pl));
-                   // Bukkit.broadcastMessage("player " + pl.getName() + " is currently a " + kitInfo.getPlayerKit(pl));
                     Sounds.obfuscation(pl);
 
                     if (kitInfo.getPlayerKit(pl) == Kits.SCOUT || kitInfo.getPlayerKit(pl) == Kits.PHANTOM) {
                         pl.setAllowFlight(false);
                     }
+
+                    if (kitInfo.getPlayerKit(pl) == Kits.IMPOSTER) {
+                        if (DisguiseAPI.isDisguised(pl)) {
+                            DisguiseAPI.undisguiseToAll(pl);
+                            pl.sendMessage(ChatColor.RED + "Your disguise was removed!");
+                            disguiseEffect(pl.getLocation());
+                        }
+                    }
                     kitInfo.setPlayerKit(pl, Kits.NONE);
 
 
-                    //Bukkit.broadcastMessage("player " + pl.getName() + " should be a " + kitList.get(pl));
 
                     pl.sendMessage(ChatColor.RED + "Your kit was disabled temporarily by an Hacker!");
 
@@ -155,7 +160,6 @@ public class Hacker implements Listener {
                     for (Player player : kitList.keySet()) {
                         player.sendMessage(ChatColor.GREEN + "You regained your kit abilities!");
 
-                        //Bukkit.broadcastMessage(kitList.get(player) + "");
                         kitInfo.setPlayerKit(player, kitList.get(player));
                         if (kitInfo.getPlayerKit(player) == Kits.SCOUT || kitInfo.getPlayerKit(player) == Kits.PHANTOM) {
                             player.setAllowFlight(true);
@@ -169,7 +173,11 @@ public class Hacker implements Listener {
         }.runTaskTimer(HardcoreGames.getInstance(), 0L, 20L);
     }
 
-
+    public void disguiseEffect (Location loc) {
+        loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 40);
+        loc.getWorld().spawnParticle(Particle.CAMPFIRE_COSY_SMOKE, loc, 40);
+        loc.getWorld().playSound(loc, Sound.BLOCK_FURNACE_FIRE_CRACKLE, 10f, 1f);
+    }
     public static List<Player> getCurrentObfuscated () {
         return currentObfuscated;
     }

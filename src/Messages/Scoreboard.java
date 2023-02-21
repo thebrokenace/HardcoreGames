@@ -1,6 +1,7 @@
 package Messages;
 
 import Kits.KitTools.KitInfo;
+import Main.Config;
 import Main.HardcoreGames;
 import Main.PlayerStats;
 import Util.Game;
@@ -8,31 +9,20 @@ import Util.GamePhase;
 import Util.GameTimer;
 import fr.mrmicky.fastboard.FastBoard;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
-import sun.plugin2.message.Message;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static org.bukkit.Bukkit.getServer;
 
 public class Scoreboard implements Listener {
 
     static Game game = Game.getSharedGame();
     static KitInfo kitInfo = KitInfo.getSharedKitInfo();
-
-    static HashMap<UUID, org.bukkit.scoreboard.Scoreboard> scoreboardHashMap = new HashMap<UUID, org.bukkit.scoreboard.Scoreboard>();
+    static Config config = new Config();
 
     private static final Map<UUID, FastBoard> boards = new HashMap<>();
 
@@ -65,7 +55,7 @@ public class Scoreboard implements Listener {
 //
 //                    }
                     for (FastBoard board : boards.values()) {
-                        updateBoard(board, ticks[0]);
+                        updateBoard(board, ticks[0], board.getPlayer().getUniqueId());
                     }
                 } else {
                     for (Player player : Bukkit.getOnlinePlayers()) {
@@ -107,15 +97,22 @@ public class Scoreboard implements Listener {
         }
     }
 
-    static int gamesAnimation = 0;
-    static int killsAnimation = 0;
-    static int winsAnimation = 0;
+    public static HashMap<UUID, Integer> gamesAnimations = new HashMap<UUID, Integer>();
+    public static HashMap<UUID, Integer> killsAnimations = new HashMap<UUID, Integer>();
+    public static HashMap<UUID, Integer> winsAnimations = new HashMap<UUID, Integer>();
+    public static HashMap<UUID, Integer> waitingAnimations = new HashMap<UUID, Integer>();
+    public static HashMap<UUID, Integer> ipAnimations = new HashMap<UUID, Integer>();
 
-    static int waitingAnimation = 0;
-    static int ipAnimation = 0;
 
 
-    private static void updateBoard(FastBoard board, int ticks) {
+
+    private static void updateBoard(FastBoard board, int ticks, UUID uuid) {
+        int gamesAnimation = gamesAnimations.getOrDefault(uuid, 0);
+        int killsAnimation = killsAnimations.getOrDefault(uuid, 0);
+        int winsAnimation = winsAnimations.getOrDefault(uuid, 0);
+
+        int waitingAnimation = waitingAnimations.getOrDefault(uuid, 0);
+        int ipAnimation = ipAnimations.getOrDefault(uuid, 0);
 
         List<String> gamesLines = new ArrayList<>();
         gamesLines.add("§d§c§lTotal Games");
@@ -249,7 +246,9 @@ public class Scoreboard implements Listener {
 
 
 
-        List<String> elysiumsLines = Messages.elysiumsTagAnimation();
+        List<String> elysiumsLines = new ArrayList<>();
+        elysiumsLines.addAll(Messages.elysiumsTagAnimation());
+        elysiumsLines.addAll(Messages.reversedAnimation());
 
 
         if (ticks % 4 == 0) {
@@ -284,7 +283,7 @@ public class Scoreboard implements Listener {
         strings.add(winsLines.get(winsAnimation));
         strings.add("§6§b • §7"+ PlayerStats.getStats().getTotalWins(board.getPlayer()));
         strings.add("");
-        strings.add("§3§f§lPlayers: " + Bukkit.getOnlinePlayers().size() + "/" + "16");
+        strings.add("§3§f§lPlayers: " + Bukkit.getOnlinePlayers().size() + "/" + config.maxPlayers());
         strings.add("");
         strings.add("§5§a§lStarting in: §f" + time);
         strings.add("");
@@ -294,6 +293,14 @@ public class Scoreboard implements Listener {
         if (!board.isDeleted()) {
             board.updateLines(strings);
         }
+
+        gamesAnimations.put(uuid, gamesAnimation);
+        killsAnimations.put(uuid, killsAnimation);
+        winsAnimations.put(uuid, winsAnimation);
+
+        waitingAnimations.put(uuid, winsAnimation);
+        ipAnimations.put(uuid, ipAnimation);
+
     }
 //    @EventHandler
 //    public void onJoin (PlayerJoinEvent e) {

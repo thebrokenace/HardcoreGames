@@ -7,25 +7,19 @@ import Util.Game;
 import Util.GamePhase;
 import Util.SkullCreator;
 import com.google.common.base.Strings;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
-import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -55,18 +49,14 @@ public class Engineer implements Listener {
 
     @EventHandler
     public void rightClickEntity(PlayerArmorStandManipulateEvent e) {
-        //Bukkit.broadcastMessage("clicked on ent");
 
         if (game.isStarted()) {
                 if (e.getRightClicked().hasMetadata("sentrygun")) {
-                   // Bukkit.broadcastMessage("clicked on sentry");
-                   // Bukkit.broadcastMessage(((Player) e.getRightClicked().getMetadata("sentrygun").get(0).value()).getDisplayName());
 
                     if ((Player) e.getRightClicked().getMetadata("sentrygun").get(0).value() == e.getPlayer()) {
 
                         e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou picked up your Sentry Gun."));
                     } else {
-                       // Bukkit.broadcastMessage("bad sentry clcikc");
 
                         e.setCancelled(true);
 
@@ -575,6 +565,7 @@ public class Engineer implements Listener {
                                             //fix target pitch + particle effects
                                             if (target[0] instanceof Player) {
                                                 creator.sendMessage(ChatColor.GREEN + "Your Sentry Gun just killed " + ((Player) target[0]).getName() + "!");
+                                                target[0] = null;
                                             }
                                         }
                                     }

@@ -34,9 +34,7 @@ public class Scout implements Listener {
 
                     if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
                         for (PotionEffect pot : stomper.getActivePotionEffects()) {
-                            //Bukkit.broadcastMessage(pot.toString());
                             if (pot.getType().equals(PotionEffectType.SPEED)) {
-                                //Bukkit.broadcastMessage("scout has speed");
                                 if (e.getDamage() > 1) {
                                     e.setDamage(1);
                                 }

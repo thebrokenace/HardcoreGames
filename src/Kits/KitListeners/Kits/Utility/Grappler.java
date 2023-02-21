@@ -145,7 +145,6 @@ public class Grappler implements Listener {
 
     private void pullPlayerSlightly(Player p, Location loc){
 
-        Bukkit.broadcastMessage("slightly pulling enitty");
 
         if(loc.getY() > p.getLocation().getY()){
             p.setVelocity(new Vector(0,2,0));
@@ -160,7 +159,6 @@ public class Grappler implements Listener {
 
     private void pullEntityToLocation(final Entity e, Location loc){
 
-        Bukkit.broadcastMessage("pulling enitty");
 
         Location entityLoc = e.getLocation();
 

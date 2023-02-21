@@ -104,7 +104,6 @@ public class Robot {
 
         kitInfo.setPlayerKit(npc.getEntity(), Surprise.getRandomKit());
 
-        //Bukkit.broadcastMessage(kitInfo.getPlayerKit(npc.getEntity()) + "kit");
 
 
         npc.getTraitNullable(SkinTrait.class).setSkinName(SkinPicker.getRandomSkin());
@@ -546,7 +545,6 @@ public class Robot {
 
 
 //        for (NPC npc : activeRobots()) {
-//            //Bukkit.broadcastMessage(ChatColor.YELLOW + npc.getName() + " has left the game");
 //            //CitizensAPI.getNPCRegistry().deregister(npc);
 //                //npc.destroy();
 //

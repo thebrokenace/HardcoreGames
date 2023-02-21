@@ -4,7 +4,6 @@ import Kits.KitTools.KitInfo;
 import Kits.KitTools.Kits;
 import Util.Game;
 import Util.Sounds;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

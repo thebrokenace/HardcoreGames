@@ -4,6 +4,7 @@ import Kits.KitListeners.Kits.Attack.Archer;
 import Kits.KitListeners.Kits.Attack.Werewolf;
 import Kits.KitListeners.Kits.Defense.Chameleon;
 import Kits.KitListeners.Kits.Defense.Madman;
+import Kits.KitListeners.Kits.Utility.Plague;
 import Kits.KitListeners.Kits.Utility.Spy;
 import Kits.KitListeners.Kits.Vanity.Stand;
 import Kits.KitListeners.Kits.Vanity.Surprise;
@@ -16,13 +17,17 @@ import Messages.Messages;
 import Robots.Robot;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Inventory;
-import org.bukkit.*;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import Messages.Scoreboard;
 
 import java.util.Random;
 
@@ -74,6 +79,7 @@ public class GameTimer {
     static boolean tier3 = false;
     static boolean tier4 = false;
     public static void startGame () {
+     kitActionBar();
      BukkitTask task =   new BukkitRunnable() {
             int seconds = Queue.tier1Time();
 
@@ -101,67 +107,51 @@ public class GameTimer {
                 pregenerateTeleportLocations();
                 checkInvalidWorld();
                 if (tier1 && !Queue.tier1(Bukkit.getOnlinePlayers().size())) {
-                    Bukkit.broadcastMessage(ChatColor.BLUE + "Tier 1 tuned false");
 
                     tier1 = false;
                     //seconds = Queue.tier1Time();
-                    Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 10f, 1f));
                 }
 
                 if (tier2 && !Queue.tier2(Bukkit.getOnlinePlayers().size())) {
-                    Bukkit.broadcastMessage(ChatColor.BLUE + "Tier 2 tuned false");
 
                     tier2 = false;
                     seconds = Queue.tier1Time();
-                    Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 10f, 1f));
                 }
 
                 if (tier3 && !Queue.tier3(Bukkit.getOnlinePlayers().size())) {
-                    Bukkit.broadcastMessage(ChatColor.BLUE + "Tier 3 tuned false");
 
                     tier3 = false;
                     seconds = Queue.tier2Time();
-                    Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 10f, 1f));
                 }
 
                 if (tier4 && !Queue.tier4(Bukkit.getOnlinePlayers().size())) {
-                    Bukkit.broadcastMessage(ChatColor.BLUE + "Tier 4 tuned false");
 
                     tier4 = false;
                     seconds = Queue.tier3Time();
-                    Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_FAIL, 10f, 1f));
                 }
 
 
                 if (!tier1 && Queue.tier1(Bukkit.getOnlinePlayers().size())) {
-                    Bukkit.broadcastMessage(ChatColor.BLUE + "Tier 1 tuned true");
                     tier1 = true;
                     seconds = Queue.timeLeft(Bukkit.getOnlinePlayers().size());
-                    Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_CHICKEN_EGG, 10f, 1f));
                 }
 
                 if (!tier2 && Queue.tier2(Bukkit.getOnlinePlayers().size())) {
-                    Bukkit.broadcastMessage(ChatColor.BLUE + "Tier 2 tuned true");
 
                     tier2 = true;
                     seconds = Queue.timeLeft(Bukkit.getOnlinePlayers().size());
-                    Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_CHICKEN_EGG, 10f, 1f));
                 }
 
                 if (!tier3 && Queue.tier3(Bukkit.getOnlinePlayers().size())) {
-                    Bukkit.broadcastMessage(ChatColor.BLUE + "Tier 3 tuned true");
 
                     tier3 = true;
                     seconds = Queue.timeLeft(Bukkit.getOnlinePlayers().size());
-                    Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_CHICKEN_EGG, 10f, 1f));
                 }
 
                 if (!tier4 && Queue.tier4(Bukkit.getOnlinePlayers().size())) {
-                    Bukkit.broadcastMessage(ChatColor.BLUE + "Tier 4 tuned true");
 
                     tier4 = true;
                     seconds = Queue.timeLeft(Bukkit.getOnlinePlayers().size());
-                    Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.ENTITY_CHICKEN_EGG, 10f, 1f));
                 }
 
 
@@ -187,6 +177,10 @@ public class GameTimer {
         giveKitsPlayers();
         teleportBotsAndPlayers();
         activatePassiveAbilities();
+        game.getWorld().setTime(0);
+        game.getWorld().setStorm(false);
+
+
 
         Bukkit.broadcastMessage(ChatColor.AQUA + "Grace period has started!\nYou have 3 minutes to gather materials before PVP is enabled!");
 
@@ -202,6 +196,7 @@ public class GameTimer {
         Chameleon.camouflage();
         Spy.spySeeKit();
         Stand.giveStands();
+        Plague.plagueCheckForInfection();
 
     }
     public static void pregenerateTeleportLocations () {
@@ -384,6 +379,7 @@ public class GameTimer {
 
                     Bukkit.broadcastMessage(ChatColor.RED + "PVP is now enabled!");
                     game.setPhase(GamePhase.GAMESTARTED);
+                    PlayerStats.getStats().addCurrentGame();
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         PlayerStats.getStats().addGame(p);
                     }
@@ -404,7 +400,6 @@ public class GameTimer {
         if (Bukkit.getOnlinePlayers().size() != 0) {
             if (config.getBotsEnabled()) {
 
-                // Bukkit.broadcastMessage("started spawning");
                 startSpawning(botcount);
                 return true;
             }
@@ -441,9 +436,7 @@ public class GameTimer {
                 int maxinterval = config.maxIntervalBot();
                 int mininterval = config.minIntervalBot();
                 int interval = random.nextInt(maxinterval) + mininterval;
-                //Bukkit.broadcastMessage("trying to spawning bots");
-//                Bukkit.broadcastMessage("new recursion just started spawning bots");
-//                Bukkit.broadcastMessage("bot count this time is" + botcount);
+
 
                 BukkitTask task = new BukkitRunnable() {
 
@@ -477,6 +470,20 @@ public class GameTimer {
 
             }
 
+    public static void kitActionBar () {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (game.getPhase() == GamePhase.PREGAME) {
+                    for (Player p :Bukkit.getOnlinePlayers()) {
+                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&6&lSelected Kit: " + kitInfo.getKitUnformatted(kitInfo.getPlayerKit(p)) )));
 
+                    }
+                } else {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(HardcoreGames.getInstance(), 0L, 20L);
+    }
 
 }

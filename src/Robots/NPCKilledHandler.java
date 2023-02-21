@@ -55,7 +55,6 @@ public class NPCKilledHandler implements Listener {
 
 //                for (NPC npcs : robot.activeRobots()) {
 //                    if (npc.equals(npcs)) {
-//                        Bukkit.broadcastMessage(ChatColor.YELLOW + npc.getName() + " left the game");
 //                        npc.destroy();
 //                        robot.removeRobot(npcs);
 //                        //should be deregistered, doesn't get rid of our tablist
@@ -87,9 +86,7 @@ public class NPCKilledHandler implements Listener {
 //                while(CitizensAPI.getNPCRegistries().iterator().hasNext()) {
 //                    NPCRegistry npcRegistry = CitizensAPI.getNPCRegistries().iterator().next();
 //                    while(npcRegistry.sorted().iterator().hasNext()) {
-//                        //Bukkit.broadcastMessage("iterating npc..");
 //                        NPC npccheck = npcRegistry.sorted().iterator().next();
-//                        Bukkit.broadcastMessage(npccheck.getName() + "checking");
 //
 //                        if (npc == npccheck) {
 //
@@ -112,7 +109,6 @@ public class NPCKilledHandler implements Listener {
 
                         CitizensAPI.getNPCRegistry().deregister(npc1);
                         robot.removeRobot(npc1);
-                        //Bukkit.broadcastMessage(robot.activeRobots().size() + "active robots amount");
                         Bukkit.broadcastMessage(ChatColor.YELLOW + npc1.getName() + " has left the game");
 
 
@@ -149,7 +145,6 @@ public class NPCKilledHandler implements Listener {
 //            Player p = e.getEntity();
 //           // npcPickup(killer);
 //            if (nearestPlayer(killer.getEntity()) != null) {
-//                //Bukkit.broadcastMessage(nearestPlayer(killer.getEntity()).toString() + " new ateget");
 //
 //                killer.getOrAddTrait(SentinelTrait.class).targetingHelper.addTarget(nearestPlayer(killer.getEntity()).getUniqueId());
 //
@@ -203,11 +198,8 @@ public class NPCKilledHandler implements Listener {
     @EventHandler
     public void onSentinelTarget (SentinelNoMoreTargetsEvent e) {
         e.getNPC().getOrAddTrait(Waypoints.class).setWaypointProvider("wander");
-//        Bukkit.broadcastMessage(e.getNPC().getName() + " no longer has a targetr");
-//        Bukkit.broadcastMessage(nearestPlayer(e.getNPC().getEntity()).toString());
 
         if (nearestPlayer(e.getNPC().getEntity()) != null) {
-           // Bukkit.broadcastMessage(nearestPlayer(e.getNPC().getEntity()).toString() + " new ateget");
 
             e.getNPC().getOrAddTrait(SentinelTrait.class).targetingHelper.addTarget(nearestPlayer(e.getNPC().getEntity()).getUniqueId());
 
@@ -244,9 +236,7 @@ public class NPCKilledHandler implements Listener {
                 NPC npc = e.getNPC();
                 npc.removeTrait(Waypoints.class);
 
-                //Bukkit.broadcastMessage("npc damagwed");
                 if (((LivingEntity) npc.getEntity()).getHealth() < 5) {
-                    // Bukkit.broadcastMessage("npc health too low");
 
                     //npc.getOrAddTrait(SentinelTrait.class).targetingHelper.addAvoid(e.getDamager().getUniqueId());
                     if (e.getDamager() instanceof LivingEntity) {
@@ -368,7 +358,6 @@ public class NPCKilledHandler implements Listener {
 
 //    @EventHandler
 //    public void onStuck  (NavigationStuckEvent e) {
-////        Bukkit.broadcastMessage(ChatColor.RED + e.getNPC().getName() + " is stuck");
 ////
 ////
 ////       // timesStuck.put(e.getNPC().getUniqueId(), timesStuck.getOrDefault(e.getNPC().getUniqueId(), 0) + 1);
@@ -378,7 +367,6 @@ public class NPCKilledHandler implements Listener {
 ////                if (e.getNPC().getEntity().getLocation().getBlock().isLiquid()) {
 ////                    if (e.getNPC().getEntity().getVehicle() == null) {
 ////                        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.BOAT, "boat");
-////                        Bukkit.broadcastMessage(ChatColor.BLACK + "bo0at");
 ////                        npc.spawn(e.getNPC().getEntity().getLocation());
 ////                        npc.getEntity().addPassenger(e.getNPC().getEntity());
 ////                        npc.getEntity().setGravity(true);
@@ -389,13 +377,11 @@ public class NPCKilledHandler implements Listener {
 //        }
 //             timesStuck.put(e.getNPC().getUniqueId(), 0);
 //             if (!nearestPlayer(e.getNPC().getEntity()).isEmpty()) {
-//                 Bukkit.broadcastMessage(nearestPlayer(e.getNPC().getEntity()).toString() + " new ateget");
 //
 //                 e.getNPC().getOrAddTrait(SentinelTrait.class).targetingHelper.addTarget(nearestPlayer(e.getNPC().getEntity()).getUniqueId());
 //
 //                 e.getNPC().getOrAddTrait(SentinelTrait.class).targetingHelper.updateTargets();
 //             } else {
-//                 Bukkit.broadcastMessage("no targets inbound. switch to random loc range phase");
 //             }
          //}
     //}

@@ -1,10 +1,12 @@
 package Listeners;
 
+import KitGUI.InventoryGUI;
 import Kits.KitListeners.Kits.Utility.Spy;
 import Main.Config;
 import Main.HardcoreGames;
 import Messages.Messages;
 import Util.Game;
+import Util.GamePhase;
 import net.citizensnpcs.api.npc.NPC;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -36,38 +38,54 @@ public class PlayerInteractListener implements Listener {
     Game game = Game.getSharedGame();
     public static HashMap<Player, Entity> trackMap = new HashMap<>();
     Config config = new Config();
+
+    @EventHandler
+    public void onKitSelector (PlayerInteractEvent e) {
+        if (game.getPhase() == GamePhase.PREGAME) {
+            if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (e.getItem() != null && e.getItem().getItemMeta() != null && ChatColor.stripColor(e.getItem().getItemMeta().getDisplayName()).equals("Kit Selector")) {
+                    e.getPlayer().openInventory(InventoryGUI.playerUnlockedKits(e.getPlayer()));
+                }
+            }
+        }
+    }
+
+
+
     @EventHandler
     public void onInteract (PlayerInteractEvent e) {
         //check for soup heal
-        if (config.getSoupStats()) {
-            if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (e.getItem() != null && e.getItem().getType() == Material.MUSHROOM_STEW) {
-                    if (e.getPlayer().getHealth() >= 20 && e.getPlayer().getFoodLevel() >= 20) {
-                        return;
-                    }
-                    CraftPlayer cPlayer = ((CraftPlayer) e.getPlayer());
-                    PacketPlayOutEntityStatus eat = new PacketPlayOutEntityStatus(cPlayer.getHandle(), (byte) 9);
-                    cPlayer.getHandle().playerConnection.sendPacket(eat);
+        if (game.isStarted()) {
+            if (config.getSoupStats()) {
+                if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    if (e.getItem() != null && e.getItem().getType() == Material.MUSHROOM_STEW) {
+                        if (e.getPlayer().getHealth() >= 20 && e.getPlayer().getFoodLevel() >= 20) {
+                            return;
+                        }
+                        CraftPlayer cPlayer = ((CraftPlayer) e.getPlayer());
+                        PacketPlayOutEntityStatus eat = new PacketPlayOutEntityStatus(cPlayer.getHandle(), (byte) 9);
+                        cPlayer.getHandle().playerConnection.sendPacket(eat);
 
 
-                    if (e.getPlayer().getHealth() == 20) {
-                        e.getPlayer().setFoodLevel(e.getPlayer().getFoodLevel() + 3);
-                    } else {
-                        if (e.getPlayer().getHealth() >= 14) {
-                            e.getPlayer().setHealth(20);
+                        if (e.getPlayer().getHealth() == 20) {
+                            e.getPlayer().setFoodLevel(e.getPlayer().getFoodLevel() + 3);
                         } else {
-                            e.getPlayer().setHealth(e.getPlayer().getHealth() + 6);
+                            if (e.getPlayer().getHealth() >= 14) {
+                                e.getPlayer().setHealth(20);
+                            } else {
+                                e.getPlayer().setHealth(e.getPlayer().getHealth() + 6);
+                            }
+
                         }
 
+                        if (e.getHand() == EquipmentSlot.OFF_HAND) {
+                            e.getPlayer().getInventory().setItemInOffHand(new ItemStack(Material.BOWL));
+                        }
+                        if (e.getHand() == EquipmentSlot.HAND) {
+                            e.getPlayer().getInventory().setItemInMainHand(new ItemStack(Material.BOWL));
+                        }
+                        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_GENERIC_EAT, 10f, 1f);
                     }
-
-                    if (e.getHand() == EquipmentSlot.OFF_HAND) {
-                        e.getPlayer().getInventory().setItemInOffHand(new ItemStack(Material.BOWL));
-                    }
-                    if (e.getHand() == EquipmentSlot.HAND) {
-                        e.getPlayer().getInventory().setItemInMainHand(new ItemStack(Material.BOWL));
-                    }
-                    e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_GENERIC_EAT, 10f, 1f);
                 }
             }
         }
@@ -75,35 +93,36 @@ public class PlayerInteractListener implements Listener {
 
     @EventHandler
     public void onTrack (PlayerInteractEvent e) {
-        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (e.getItem() != null && e.getItem().getType() == Material.COMPASS) {
-                ItemMeta meta = e.getItem().getItemMeta();
-                if (meta != null) {
-                    if (ChatColor.stripColor(meta.getDisplayName()).equalsIgnoreCase("Spy Compass")) {
-                        return;
+        if (game.isStarted()) {
+            if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (e.getItem() != null && e.getItem().getType() == Material.COMPASS) {
+                    ItemMeta meta = e.getItem().getItemMeta();
+                    if (meta != null) {
+                        if (ChatColor.stripColor(meta.getDisplayName()).equalsIgnoreCase("Spy Compass")) {
+                            return;
+                        }
                     }
-                }
-                if (nearestPlayer(e.getPlayer()) != null) {
-                    if (trackMap.getOrDefault(e.getPlayer(), null) != nearestPlayer(e.getPlayer())) {
-                        Spy.trackMap.remove(e.getPlayer());
-                        track(e.getPlayer(), nearestPlayer(e.getPlayer()));
-                    }
-                    //if (trackMap.getOrDefault(e.getPlayer(), null) != nearestPlayer(e.getPlayer())) {
+                    if (nearestPlayer(e.getPlayer()) != null) {
+                        if (trackMap.getOrDefault(e.getPlayer(), null) != nearestPlayer(e.getPlayer())) {
+                            Spy.trackMap.remove(e.getPlayer());
+                            track(e.getPlayer(), nearestPlayer(e.getPlayer()));
+                        }
+                        //if (trackMap.getOrDefault(e.getPlayer(), null) != nearestPlayer(e.getPlayer())) {
                         e.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messages.trackMessage(nearestPlayer(e.getPlayer()))));
-                    //}
-                } else {
-                    e.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messages.failedTrack()));
+                        //}
+                    } else {
+                        e.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messages.failedTrack()));
 
+                    }
                 }
-            }
 
             }
+        }
     }
 
     //fix ASAP, makes new runnable on each right click
     public void track (Player tracker, Entity victim) {
-
-            //Bukkit.broadcastMessage("started new runnable");
+            tracker.playSound(tracker.getLocation(), Sound.ITEM_ARMOR_EQUIP_DIAMOND, 10f, 1f);
             trackMap.put(tracker, victim);
             new BukkitRunnable() {
                 @Override
@@ -115,7 +134,6 @@ public class PlayerInteractListener implements Listener {
                     if (trackMap.get(tracker) == victim) {
                         tracker.setCompassTarget(victim.getLocation());
                     } else {
-                        //Bukkit.broadcastMessage("Cancelled " + tracker.getName() + " tracking " + victim.getName());
                         cancel();
                     }
                 }

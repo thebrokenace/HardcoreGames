@@ -7,16 +7,17 @@ import Main.HardcoreGames;
 import Messages.Messages;
 import Util.Game;
 import Util.GamePhase;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.World;
+import me.libraryaddict.disguise.DisguiseAPI;
+import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.HashMap;
@@ -29,10 +30,10 @@ public class PlayerJoinQuitListener implements Listener {
     @EventHandler
     public void onJoin (PlayerLoginEvent e) {
             //if in losers list, kick on entry (or force spectator)
-        //Bukkit.broadcastMessage(game.getPhase().toString());
         if (game.getPhase() == GamePhase.WINNERDECIDED) {
-            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, message.pleaseWait());
-
+            //e.disallow(PlayerLoginEvent.Result.KICK_OTHER, message.pleaseWait());
+            KitInfo.getSharedKitInfo().setPlayerKit(e.getPlayer(), Kits.NONE);
+            e.getPlayer().setGameMode(GameMode.SPECTATOR);
         }
 
         if (game.isStarted()) {
@@ -98,12 +99,21 @@ public class PlayerJoinQuitListener implements Listener {
 
             }
 
+
+
+
             Chameleon.removeNoNametagIfExists(e.getPlayer());
             Chameleon.removeChameleonCounter(e.getPlayer());
 
             World world = Bukkit.getWorld("hungergames");
             if (world != null) {
                 e.getPlayer().teleport(world.getSpawnLocation());
+            }
+
+            giveKitSelector(e.getPlayer());
+
+            if (DisguiseAPI.isDisguised(e.getPlayer())) {
+                DisguiseAPI.undisguiseToAll(e.getPlayer());
             }
         } else  {
 
@@ -167,14 +177,22 @@ public class PlayerJoinQuitListener implements Listener {
 
     }
 
+    public void giveKitSelector (Player p) {
+        ItemStack kitCompass = new ItemStack(Material.COMPASS);
+        ItemMeta meta = kitCompass.getItemMeta();
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&lKit Selector"));
+        kitCompass.setItemMeta(meta);
+        p.getInventory().setItem(0, kitCompass);
+    }
     @EventHandler
     public void onQuit (PlayerQuitEvent e) {
         if (!wasKicked.containsKey(e.getPlayer().getUniqueId())) {
             //add to losers list
             if (game.isStarted()) {
-                game.addLoser(e.getPlayer().getUniqueId());
-                message.sendToAll(message.deathFormattedMessage(e.getPlayer(), e.getPlayer()));
-                Bukkit.broadcastMessage(message.peopleLeftMessage());
+                if (e.getPlayer().getGameMode() != GameMode.SPECTATOR) {
+                    game.addLoser(e.getPlayer().getUniqueId());
+                    message.sendToAll(message.deathFormattedMessage(e.getPlayer(), e.getPlayer()));
+                    Bukkit.broadcastMessage(message.peopleLeftMessage());
 //            for (ItemStack i :  e.getPlayer().getInventory().getContents()) {
 //                if (i != null) {
 //                    if (e.getPlayer().getLocation().getWorld() != null) {
@@ -183,22 +201,19 @@ public class PlayerJoinQuitListener implements Listener {
 //                }
 //            }
 
-                e.getPlayer().setHealth(0);
-//            Bukkit.broadcastMessage(game.currentPlayersLeft() + "hi" + game.currentPlayerList().size() + " size player");
-//            if ((game.currentPlayersLeft()-1 == 1) && (game.currentPlayerList().size()-1 == 1)) {
-//                if (game.setValidWinner()) {
-//                    Bukkit.broadcastMessage(ChatColor.AQUA + "Congratulations " + game.getWinner().getName() + " for winning!!");
-//                } else  {
-//                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED+ "Error occurred when trying to set winner");
-//
-//                }
-//            }
+                    e.getPlayer().setHealth(0);
+                }
+
 
             } else {
                 if (game.getPlayers().contains(e.getPlayer().getUniqueId())) {
                     game.removePlayer(e.getPlayer().getUniqueId());
                 }
             }
+        }
+
+        if (e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
+            e.setQuitMessage(null);
         }
 
     }

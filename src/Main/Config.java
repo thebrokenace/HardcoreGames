@@ -18,8 +18,14 @@ public class Config {
         config.addDefault("Bots Count As Players", false);
         config.addDefault("Minimum Time Before Border Close", 4);
         config.addDefault("Maximum Time Before Border Close", 8);
+        config.addDefault("Forcefield Speed", 5.4);
         config.options().copyDefaults(true);
         HardcoreGames.getInstance().saveConfig();
+    }
+
+    public double getForcefieldSpeed () {
+        FileConfiguration config = HardcoreGames.getInstance().getConfig();
+        return config.getDouble("Forcefield Speed");
     }
 
     public int getMinBorderTime () {

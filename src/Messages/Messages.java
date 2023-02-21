@@ -9,13 +9,15 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftTippedArrow;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.projectiles.ProjectileSource;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -59,7 +61,6 @@ public class Messages {
             finalColor = new Color(red, green, blue);
             String hex = "#" + Integer.toHexString(finalColor.getRGB()).substring(2);
 
-            //Bukkit.broadcastMessage(hex + msg);
 
             String formats = "";
             if (bold) formats += net.md_5.bungee.api.ChatColor.BOLD;
@@ -164,7 +165,6 @@ public class Messages {
 
                 TextComponent killerkitdesc = new TextComponent(killerkit);
                 TextComponent victimkitdesc = new TextComponent(victimkit);
-                //Bukkit.broadcastMessage(ChatColor.RED + formatDescription( KitInfo.kitDescription(kitInfo.getPlayerKit(killer))).toString());
                 String description1 = ChatColor.AQUA + "";
                 for (int i = 0; i < formatDescription( KitInfo.kitDescription(kitInfo.getPlayerKit(killer))).size(); i++) {
                     if (i == formatDescription( KitInfo.kitDescription(kitInfo.getPlayerKit(victim))).size()-1) {
@@ -218,8 +218,6 @@ public class Messages {
 
 
         } else {
-            //Bukkit.broadcastMessage("did not die to player");
-                //Bukkit.broadcastMessage("mob killed player");
                 mainComponent.setColor(net.md_5.bungee.api.ChatColor.AQUA);
                 mainComponent.addExtra(victimkitdesc);
 
@@ -312,7 +310,6 @@ public class Messages {
 
 
 
-        //Bukkit.broadcastMessage(killer.getType().toString());
 //
 //        String newDeathMessage = "managed to die in a really strange way...";
 ////        mainComponent.setColor(net.md_5.bungee.api.ChatColor.AQUA);
@@ -396,6 +393,9 @@ public class Messages {
 
         List<String> strings = new ArrayList<>();
         strings.add(hex1 + e + hex2 + l + hex3 + y + hex4 + s + hex5 + i + hex6 + u + hex7 + m + hex8 + ss);
+        strings.add(hex1 + e + hex2 + l + hex3 + y + hex4 + s + hex5 + i + hex6 + u + hex7 + m + hex8 + ss);
+
+        strings.add(hex1 + e + hex2 + l + hex3 + y + hex4 + s + hex5 + i + hex6 + u + hex7 + m + hex8 + ss);
         strings.add(hex8 + e + hex1 + l + hex2 + y + hex3 + s + hex4 + i + hex5 + u + hex6 + m + hex7 + ss);
         strings.add(hex7 + e + hex8 + l + hex1 + y + hex2 + s + hex3 + i + hex4 + u + hex5 + m + hex6 + ss);
         strings.add(hex6 + e + hex7 + l + hex8 + y + hex1 + s + hex2 + i + hex3 + u + hex4 + m + hex5 + ss);
@@ -403,6 +403,9 @@ public class Messages {
         strings.add(hex4 + e + hex5 + l + hex6 + y + hex7 + s + hex8 + i + hex1 + u + hex2 + m + hex3 + ss);
         strings.add(hex3 + e + hex4 + l + hex5 + y + hex6 + s + hex7 + i + hex8 + u + hex1 + m + hex2 + ss);
         strings.add(hex2 + e + hex3 + l + hex4 + y + hex5 + s + hex6 + i + hex7 + u + hex8 + m + hex1 + ss);
+        strings.add(hex1 + e + hex2 + l + hex3 + y + hex4 + s + hex5 + i + hex6 + u + hex7 + m + hex8 + ss);
+        strings.add(hex1 + e + hex2 + l + hex3 + y + hex4 + s + hex5 + i + hex6 + u + hex7 + m + hex8 + ss);
+        strings.add(hex1 + e + hex2 + l + hex3 + y + hex4 + s + hex5 + i + hex6 + u + hex7 + m + hex8 + ss);
 
         List<String> formatted = new ArrayList<>();
         for (String se : strings) {
@@ -410,6 +413,12 @@ public class Messages {
         }
 
         return formatted;
+    }
+
+    public static List<String> reversedAnimation () {
+        List<String> elysiumsTagAnimationClone = elysiumsTagAnimation();
+        Collections.reverse(elysiumsTagAnimationClone);
+        return elysiumsTagAnimationClone;
     }
 
     public String welcome (Player p) {
@@ -427,7 +436,6 @@ public class Messages {
 
 //        s = s.replace(death.getName(), death.getName() + " (" + victimkit + ")");
 //        s = ChatColor.AQUA + s;
-       // Bukkit.broadcastMessage(ChatColor.RED + peopleLeftMessage() + "BOING");
         //s = s + "\n" + peopleLeftMessage();
         TextComponent mainComponent = new TextComponent(ChatColor.AQUA + victim.getName() + " (");
         mainComponent.setColor(net.md_5.bungee.api.ChatColor.AQUA);
@@ -452,7 +460,6 @@ public class Messages {
         mainComponent.addExtra( ")" + " ");
 
         //maincomponnent now looks like this: "Clew (None) "
-        //Bukkit.broadcastMessage(cause.toString());
         switch (cause) {
             case FIRE_TICK: mainComponent.addExtra("sustained several burn wounds and died painfully");
                 return mainComponent;
@@ -556,7 +563,7 @@ public class Messages {
 
         }
         if (s.equals("kits")) {
-            return "kits help here";
+            return ChatColor.YELLOW + "Kits are an important component of HG, and can mean the difference between winning and losing! Be sure to type /kit when the game starts to get important information on how to use your kit!";
 
         }
         return "";

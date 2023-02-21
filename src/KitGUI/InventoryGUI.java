@@ -368,6 +368,20 @@ public class InventoryGUI {
         if (kits == Kits.STAND) {
             item = applySkullTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTZkZDFhNmU1N2YwYjNmMjc4OGViNzRkZTUwMmRmZjYxMTQ2NzQ1MWM4ZjEwYTk0YWViZjczYjAyMjk4ZjE5MyJ9fX0=");
         }
+        if (kits == Kits.VULTURE) {
+            item = applySkullTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzBiYjc1OWIwZjcyMjNjYjcwN2E4YjU2NDAxNTVmZmM1NjdmNWNjZDhmODVhZjU0NGUxYzc2ZTFmMmY3NmQ5OCJ9fX0=");
+        }
+        if (kits == Kits.PLAGUE) {
+            item = applySkullTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTg2NGQyNDVjZDQxMDljNGE2MjdiMTkzNGM3N2Q0N2I3NGM1ZWQxODQzY2ViZDU0YWU0NWNhMDFhNmFhNWQwMyJ9fX0=");
+        }
+
+        if (kits == Kits.IMPOSTER) {
+            item = applySkullTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGM0ZDQ0YTBmZmUwMjM0OWU5OWRhMDYyOTIxMzA2MzExM2U2YmIzYWZjMjU5ZjQ2NjE4YzkwZWRjZTgzMDc4NiJ9fX0=");
+        }
+
+        if (kits == Kits.PEANUT) {
+            item = applySkullTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTA0OWQ3NDk4MzA5NzAzZDVjN2U2OTdmZjFlYzc1MGE5YWMxY2ExZjNlY2MyOTA4OGQxMzYwOWM4YjY5OThiNiJ9fX0=");
+        }
 
         ItemMeta meta = item.getItemMeta();
         if (meta != null ){

@@ -4,6 +4,7 @@ import Kits.KitTools.KitInfo;
 import Kits.KitTools.Kits;
 import Main.HardcoreGames;
 import Util.Game;
+import Util.GamePhase;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCDamageByEntityEvent;
 import net.citizensnpcs.api.npc.NPC;
@@ -16,12 +17,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -33,18 +32,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -68,22 +56,24 @@ public class Stand implements Listener {
                     if (game.isStarted()) {
                         if (kitInfo.getPlayerKit(p) == Kits.STAND) {
                             if (!standMap.containsKey(p)) {
-                                NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, p.getName() + "'s Stand");
+                                NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, p.getName() + "'s " + "Stand");
 
                                 //npc.removeTrait(SkinTrait.class);
                                 //skin(npc, "https://crafatar.com/skins/" + p.getUniqueId());
 
 
                                 npc.spawn(p.getLocation());
+                                npc.getOrAddTrait(SkinTrait.class).setSkinName("StarrPlatnum");
                                 //((Player) npc.getEntity()).setInvisible(true);
+                                npc.getOrAddTrait(Controllable.class).setEnabled(false);
 
 
                                 Scoreboard sc = Bukkit.getScoreboardManager().getMainScoreboard();
 
-                                Team sca = sc.getTeam(p.getName() + "Stand");
-                                if (sc.getTeam(p.getName() + "Stand") == null) {
-                                    sc.registerNewTeam(p.getName() + "Stand");
-                                    sca = sc.getTeam(p.getName() + "Stand");
+                                Team sca = sc.getTeam("Stand");
+                                if (sc.getTeam("Stand") == null) {
+                                    sc.registerNewTeam("Stand");
+                                    sca = sc.getTeam("Stand");
                                 }
                                 if (sca != null) {
                                     for (String s : sca.getEntries()) {
@@ -108,6 +98,7 @@ public class Stand implements Listener {
 
                                 //((Player) npc.getEntity()).setInvisible(true);
                                 npc.data().set(NPC.COLLIDABLE_METADATA, true);
+
                             }
                             NPC npc = standMap.get(p);
 
@@ -122,14 +113,17 @@ public class Stand implements Listener {
                                 npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.OFF_HAND, p.getEquipment().getItemInOffHand());
                                 npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, p.getEquipment().getItemInMainHand());
                             }
+
                                 if (!attacking.containsKey(npc)) {
 
-                                    Location standby = p.getLocation().clone();
-                                    standby.setDirection(p.getLocation().getDirection());
+                                    Location standby = getBlockBehindPlayer(p).clone().add(-0.5, 1.5, 0);
+                                    standby.setDirection(p.getEyeLocation().getDirection().multiply(-1));
                                     standby.setPitch(p.getLocation().getPitch());
                                     standby.setYaw(p.getLocation().getYaw());
-
-                                    npc.getEntity().teleport(getBlockBehindPlayer(p).clone().add(-0.5, 1, 0));
+                                    if (npc.getEntity().getLocation().distance(p.getLocation()) < 2) {
+                                        standby.add(0,1,0);
+                                    }
+                                    npc.getEntity().teleport(standby);
 
                                 } else {
 
@@ -139,31 +133,20 @@ public class Stand implements Listener {
                                     if (attacking.get(npc).isDead()) {
                                         attacking.remove(npc);
                                     }
-                                    Location behindEntity = getBlockBehindPlayer(attacking.get(npc)).clone().add(-0.5, 1, 0);
-                                    behindEntity.setDirection(p.getEyeLocation().getDirection());
+                                    Location behindEntity = getBlockBehindPlayer(attacking.get(npc)).clone().add(-0.5, 1.5, 0);
+                                    behindEntity.setDirection(p.getEyeLocation().getDirection().multiply(-1));
                                     behindEntity.setYaw(p.getLocation().getYaw());
                                     behindEntity.setPitch(p.getLocation().getPitch());
+
+                                    if (behindEntity.distance(p.getLocation()) < 1.5) {
+                                        behindEntity.add(0,1,0);
+                                    }
                                     npc.getEntity().teleport(behindEntity);
                                     npc.faceLocation(attacking.get(npc).getLocation());
 
 
                                 }
 
-                                if (p.isInWater()) {
-                                    if (!p.isInsideVehicle()) {
-                                        npc.getOrAddTrait(Controllable.class).setEnabled(true);
-                                        npc.getOrAddTrait(Controllable.class).mount(p);
-                                        npc.getNavigator().getDefaultParameters().baseSpeed(5L);
-                                    }
-                                } else {
-                                    npc.getOrAddTrait(Controllable.class).setEnabled(true);
-
-//                                    npc.removeTrait(Controllable.class);
-//                                    npc.getNavigator().getDefaultParameters().baseSpeed(1L);
-
-
-
-                                }
 
 
                                 if (p.isSneaking()) {
@@ -178,14 +161,15 @@ public class Stand implements Listener {
                                 }
 
 
+
                                 if (time == 20 * 6) {
-                                    ((Player) npc.getEntity()).setInvisible(true);
+                                    //((Player) npc.getEntity()).setInvisible(true);
                                     Scoreboard sc = Bukkit.getScoreboardManager().getMainScoreboard();
 
-                                    Team sca = sc.getTeam(p.getName() + "Stand");
-                                    if (sc.getTeam(p.getName() + "Stand") == null) {
-                                        sc.registerNewTeam(p.getName() + "Stand");
-                                        sca = sc.getTeam(p.getName() + "Stand");
+                                    Team sca = sc.getTeam("Stand");
+                                    if (sc.getTeam("Stand") == null) {
+                                        sc.registerNewTeam("Stand");
+                                        sca = sc.getTeam("Stand");
                                     }
                                     if (sca != null) {
                                         for (String s : sca.getEntries()) {
@@ -207,6 +191,9 @@ public class Stand implements Listener {
 
                                     sca.setAllowFriendlyFire(false);
 
+                                    Bukkit.broadcastMessage(sca.getEntries().toString());
+                                    time++;
+
                                 } else {
                                     time++;
                                 }
@@ -225,7 +212,6 @@ public class Stand implements Listener {
     public void damageNPC (NPCDamageByEntityEvent e) {
         if (game.isStarted()) {
             if (e.getNPC().getEntity().hasMetadata("standnpc")) {
-                Bukkit.broadcastMessage("hit stand");
                 Player owner = getKeyByValue(standMap, e.getNPC());
                 if (owner != e.getDamager()) {
                     owner.damage(2);
@@ -312,6 +298,9 @@ public class Stand implements Listener {
                     if (kitInfo.getPlayerKit((Player)e.getEntity().getShooter()) == Kits.STAND) {
                         if (e.getEntity() instanceof Snowball) {
                             if (e.getHitEntity() instanceof LivingEntity) {
+                                if (e.getHitEntity() instanceof Player && game.getPhase() != GamePhase.GAMESTARTED) {
+                                    return;
+                                }
                                 if (!e.getHitEntity().hasMetadata("standnpc")) {
                                     if (e.getEntity().hasMetadata("standball")) {
 
@@ -328,9 +317,14 @@ public class Stand implements Listener {
                                                         Random ora = new Random();
                                                         if (ora.nextDouble() <= 0.50) {
                                                         ((Player) e.getEntity().getMetadata("standball").get(0).value()).sendMessage(ChatColor.BLUE + "ゴゴゴゴゴゴゴゴゴゴゴゴ!!");
+                                                            ((LivingEntity) e.getHitEntity()).damage(2, (Player) e.getEntity().getMetadata("standball").get(0).value());
+                                                            e.getHitEntity().getLocation().getWorld().spawnParticle(org.bukkit.Particle.CRIT, e.getHitEntity().getLocation(), 25);
+
                                                         } else {
 
                                                             ((Player) e.getEntity().getMetadata("standball").get(0).value()).sendMessage(ChatColor.BLUE + "ORA ORA");
+                                                            ((LivingEntity) e.getHitEntity()).damage(2, (Player) e.getEntity().getMetadata("standball").get(0).value());
+                                                            e.getHitEntity().getLocation().getWorld().spawnParticle(org.bukkit.Particle.CRIT, e.getHitEntity().getLocation(), 25);
 
                                                         }
                                                     }
@@ -343,9 +337,13 @@ public class Stand implements Listener {
                                                         Random ora = new Random();
                                                         if (ora.nextDouble() <= 0.50) {
                                                             ((Player) e.getEntity().getMetadata("standball").get(0).value()).sendMessage(ChatColor.BLUE + "ゴゴゴゴゴゴゴゴゴゴゴゴ!!");
+                                                            ((LivingEntity) e.getHitEntity()).damage(2, (Player) e.getEntity().getMetadata("standball").get(0).value());
+                                                            e.getHitEntity().getLocation().getWorld().spawnParticle(org.bukkit.Particle.CRIT, e.getHitEntity().getLocation(), 25);
                                                         } else {
 
                                                             ((Player) e.getEntity().getMetadata("standball").get(0).value()).sendMessage(ChatColor.BLUE + "ORA ORA");
+                                                            ((LivingEntity) e.getHitEntity()).damage(2, (Player) e.getEntity().getMetadata("standball").get(0).value());
+                                                            e.getHitEntity().getLocation().getWorld().spawnParticle(org.bukkit.Particle.CRIT, e.getHitEntity().getLocation(), 25);
 
                                                         }
                                                     }
@@ -415,77 +413,5 @@ public class Stand implements Listener {
         standby.setYaw(player.getLocation().getYaw());
         return standby;
     }
-    public static BufferedImage invertImage(BufferedImage inputFile) {
 
-
-        for (int x = 0; x < inputFile.getWidth(); x++) {
-            for (int y = 0; y < inputFile.getHeight(); y++) {
-                int rgba = inputFile.getRGB(x, y);
-                Color col = new Color(rgba, true);
-                col = new Color(255 - col.getRed(),
-                        255 - col.getGreen(),
-                        255 - col.getBlue());
-                inputFile.setRGB(x, y, col.getRGB());
-            }
-        }
-
-        return inputFile;
-    }
-    public static void skin(final NPC npc, String URL)  {
-        String skinName = npc.getName();
-        final SkinTrait trait = npc.getOrAddTrait(SkinTrait.class);
-
-            final String url = URL;
-            Bukkit.getScheduler().runTaskAsynchronously(CitizensAPI.getPlugin(), new Runnable() {
-                @Override
-                public void run() {
-                    DataOutputStream out = null;
-                    BufferedReader reader = null;
-                    try {
-                        URL target = new URL("https://api.mineskin.org/generate/url");
-                        HttpURLConnection con = (HttpURLConnection) target.openConnection();
-                        con.setRequestMethod("POST");
-                        con.setDoOutput(true);
-                        con.setConnectTimeout(1000);
-                        con.setReadTimeout(30000);
-                        out = new DataOutputStream(con.getOutputStream());
-                        out.writeBytes("url=" + URLEncoder.encode(url, "UTF-8"));
-                        out.close();
-
-                        reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                        JSONObject output = (JSONObject) new JSONParser().parse(reader);
-                        JSONObject data = (JSONObject) output.get("data");
-                        String uuid = (String) data.get("uuid");
-                        JSONObject texture = (JSONObject) data.get("texture");
-                        String textureEncoded = (String) texture.get("value");
-                        String signature = (String) texture.get("signature");
-                        con.disconnect();
-
-                        trait.setSkinPersistent(uuid, signature, textureEncoded);
-
-
-                    } catch (Throwable t) {
-
-                    } finally {
-                        if (out != null) {
-                            try {
-                                out.close();
-                            } catch (IOException e) {
-                            }
-                        }
-                        if (reader != null) {
-                            try {
-                                reader.close();
-                            } catch (IOException e) {
-                            }
-                        }
-                    }
-                }
-
-            });
-
-        trait.setSkinName(skinName, true);
-
-
-    }
 }

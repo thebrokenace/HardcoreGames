@@ -29,13 +29,11 @@ public class InventoryListener implements Listener {
                         Sounds.playMenuClick(p);
                     } else {
                         if (kit.equalsIgnoreCase("Next Page")) {
-                         //   Bukkit.broadcastMessage("Clicked next page");
                             p.openInventory(InventoryGUI.playerUnlockedKits2(p));
                             Sounds.nextPage(p);
 
                         }
                         if (kit.equalsIgnoreCase("Show Locked Kits")) {
-                         //   Bukkit.broadcastMessage("Clicked locked kits");
                             p.openInventory(InventoryGUI.playerLockedKits(p));
                             Sounds.playMenuClick(p);
 

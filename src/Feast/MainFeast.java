@@ -72,10 +72,13 @@ public class MainFeast implements Listener {
         }
     }
     public static void spawnFeast (World world, double size) {
+
+
+
         Location l = world.getWorldBorder().getCenter();
 
         if (l.getWorld() != null)
-        l.setY(l.getWorld().getHighestBlockYAt(l));
+        l.setY(70);
 
 
 
@@ -190,10 +193,11 @@ public class MainFeast implements Listener {
 
 
 
+            }
 
 
 
-    }
+
     public static Set<Location> circle(Location location, int radius, boolean hollow){
         Set<Location> blocks = new HashSet<Location>();
         World world = location.getWorld();

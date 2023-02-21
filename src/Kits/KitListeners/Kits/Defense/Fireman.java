@@ -40,7 +40,6 @@ public class Fireman implements Listener {
                 Player p = (Player) e.getEntity();
                 if (kitInfo.getPlayerKit(p) == Kits.FIREMAN) {
                     if (e.getDamager() instanceof LightningStrike) {
-                        //Bukkit.broadcastMessage("stuck by lighting");
                         p.setFireTicks(0);
                         e.setDamage(0);
                         e.setCancelled(true);

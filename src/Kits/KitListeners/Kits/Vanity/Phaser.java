@@ -1,14 +1,12 @@
 package Kits.KitListeners.Kits.Vanity;
 
 import Kits.KitTools.KitInfo;
-import Kits.KitTools.Kits;
 import Main.HardcoreGames;
 import Util.Game;
-import net.minecraft.server.v1_16_R3.PacketPlayOutEntityDestroy;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -69,8 +67,8 @@ public class Phaser implements Listener {
             fallingBlock.setDropItem(false);
             for (Player pl : Bukkit.getOnlinePlayers()) {
                 if (pl != p) {
-                    PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(fallingBlock.getEntityId());
-                    ((CraftPlayer) pl).getHandle().playerConnection.sendPacket(packet);
+//                    PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(fallingBlock.getEntityId());
+//                    ((CraftPlayer) pl).getHandle().playerConnection.sendPacket(packet);
                 }
             }
 

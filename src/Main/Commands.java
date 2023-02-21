@@ -8,6 +8,7 @@ import Messages.Scoreboard;
 import Robots.Robot;
 import Util.Game;
 import Util.GamePhase;
+import Util.Schematic;
 import Util.Sounds;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
@@ -43,6 +44,17 @@ public class Commands implements CommandExecutor {
             Player pl = null;
             if (commandSender instanceof Player) {
                 pl = (Player) commandSender;
+            }
+            if (strings[0].toLowerCase().equals("load")) {
+                Schematic schematic = Schematic.loadSchematic("16519");
+                for (short h : schematic.blocks) {
+                    Bukkit.broadcastMessage(h + "");
+                }
+            }
+            if (strings[0].toLowerCase().equals("statsaddgame")) {
+                stats.addCurrentGame();
+                Bukkit.broadcastMessage(stats.getCurrentGame() + "current game number");
+
             }
             if (strings[0].toLowerCase().equalsIgnoreCase("scoreboard")) {
                 Scoreboard.fastBoard();

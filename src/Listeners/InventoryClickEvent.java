@@ -1,9 +1,11 @@
 package Listeners;
 
-import Feast.MainFeast;
 import Feast.MiniFeast;
+import KitGUI.InventoryGUI;
 import Kits.KitTools.KitInfo;
 import Util.Game;
+import Util.GamePhase;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,5 +44,16 @@ public class InventoryClickEvent implements Listener {
             }
         }
 
+    }
+
+
+    @EventHandler
+    public void onClickKitSelector (org.bukkit.event.inventory.InventoryClickEvent e) {
+        if (game.getPhase() == GamePhase.PREGAME) {
+            if (e.getCurrentItem() != null && e.getCurrentItem().getItemMeta() != null && ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Kit Selector")) {
+                e.setCancelled(true);
+                e.getWhoClicked().openInventory(InventoryGUI.playerUnlockedKits((Player) e.getWhoClicked()));
+            }
+        }
     }
 }

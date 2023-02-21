@@ -11,8 +11,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 public class Prophet implements Listener {
     Game game = Game.getSharedGame();
@@ -29,7 +27,7 @@ public class Prophet implements Listener {
                     Material old = block.getType();
                     Material glass = Material.BLUE_STAINED_GLASS;
 
-                    e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 200, 2));
+                    //e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 200, 2));
                     //e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 200, 1));
                     e.getPlayer().sendBlockChange(block.getLocation(), glass.createBlockData());
                     Bukkit.getServer().getScheduler().runTaskLater(HardcoreGames.getInstance(), () ->  e.getPlayer().sendBlockChange(block.getLocation(), old.createBlockData()), 200);

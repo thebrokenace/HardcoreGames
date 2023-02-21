@@ -43,117 +43,117 @@ public class MiniFeast {
     }
 
     public static void spawnFeast (World world, double newSize) {
-        Location l = null;
-        if (newSize != 0) {
-             l = randomMiniFeastArea(world, 0);
-        } else {
-             l = randomMiniFeastArea(world, newSize);
 
-        }
+                Location l = null;
+                if (newSize != 0) {
+                    l = randomMiniFeastArea(world, 0);
+                } else {
+                    l = randomMiniFeastArea(world, newSize);
 
-        //spawn feast here
-        //Bukkit.broadcastMessage(l.toString() + "minifeast location");
-        //create grass circle
-        for (int i = 0; i < 16; i++) {
-            if (i % 2 == 0) {
-                cylinder(l.clone().add(0, i, 0), Material.GLOWSTONE, 4+i);
-            } else {
+                }
 
-                    cylinder(l.clone().add(0, i, 0), Material.QUARTZ_BLOCK, 4+i);
+                //spawn feast here
+                //create grass circle
+                for (int i = 0; i < 16; i++) {
+                    if (i % 2 == 0) {
+                        cylinder(l.clone().add(0, i, 0), Material.GLOWSTONE, 4 + i);
+                    } else {
+
+                        cylinder(l.clone().add(0, i, 0), Material.QUARTZ_BLOCK, 4 + i);
+
+
+                    }
+                    if (i == 15) {
+
+
+                        cylinder(l.clone().add(0, i, 0), Material.GRASS_BLOCK, 4 + i);
+                        for (int p = 0; p < 15; p++) {
+                            cylinder(l.clone().add(0, i + 1 + p, 0), Material.AIR, 4 + i);
+                        }
+                        dome(l.clone().add(0, i, 0), 4 + i);
+                    }
+                }
+
+                Bukkit.broadcastMessage(ChatColor.AQUA + "A Mini-Feast has just spawned at X: " + l.getX() + " Y: " + l.getY() + " Z: " + l.getZ() + "!" + "\nAll compasses will now point at the Mini Feast for the next 10 seconds!");
+                Location finalL = l;
+                Spy.cancelTrack();
+                PlayerInteractListener.cancelTrack();
+                new BukkitRunnable() {
+                    int time = 0;
+
+                    @Override
+                    public void run() {
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            p.setCompassTarget(finalL);
+                        }
+                        if (time > 20 * 10) {
+                            cancel();
+                        }
+                        time++;
+                    }
+                }.runTaskTimer(HardcoreGames.getInstance(), 0L, 1L);
+
+
+                Block center = l.clone().add(0, 16, 0).getBlock();
+                center.setType(Material.GLOWSTONE);
+                l.clone().add(0, 17, 0).getBlock().setType(Material.CHEST);
+                Block block = l.clone().add(0, 17, 0).getBlock();
+
+
+                Chest chest = (Chest) block.getState();
+
+
+                Block northChest = center.getRelative(BlockFace.NORTH);
+                Block westChest = center.getRelative(BlockFace.WEST);
+                Block eastChest = center.getRelative(BlockFace.EAST);
+                Block southChest = center.getRelative(BlockFace.SOUTH);
+
+                northChest.setType(Material.CHEST);
+                westChest.setType(Material.CHEST);
+                eastChest.setType(Material.CHEST);
+                southChest.setType(Material.CHEST);
+
+                List<Block> orient = new ArrayList<>();
+                orient.add(northChest);
+                orient.add(westChest);
+                orient.add(eastChest);
+                orient.add(southChest);
+                for (Block b : orient) {
+                    if (relativeToBlockandBlock(center, b) != null) {
+
+                        if (setBlock(b, Material.CHEST, relativeToBlockandBlock(center, b)) != null) {
+                            b.setBlockData(setBlock(b, Material.CHEST, relativeToBlockandBlock(center, b)));
+                            b.getState().update();
+                        }
+
+
+                    }
+                }
+
+
+                List<Chest> miniFeastChests = new ArrayList<>();
+
+                Chest north = (Chest) northChest.getState();
+                Chest west = (Chest) westChest.getState();
+                Chest east = (Chest) eastChest.getState();
+                Chest south = (Chest) southChest.getState();
+
+                miniFeastChests.add(chest);
+                miniFeastChests.add(north);
+                miniFeastChests.add(west);
+                miniFeastChests.add(east);
+                miniFeastChests.add(south);
+
+
+                for (Chest chests : miniFeastChests) {
+                    fillChests(chests);
+                }
 
 
             }
-            if (i == 15) {
-
-
-                cylinder(l.clone().add(0, i, 0), Material.GRASS_BLOCK, 4+i);
-                for (int p =0; p < 15; p++) {
-                    cylinder(l.clone().add(0, i+1+p,0), Material.AIR, 4+i);
-                }
-                dome(l.clone().add(0,i,0), 4+i);
-            }
-        }
-
-        Bukkit.broadcastMessage(ChatColor.AQUA + "A Mini-Feast has just spawned at X: " + l.getX() + " Y: " + l.getY() + " Z: " + l.getZ() + "!" + "\nAll compasses will now point at the Mini Feast for the next 10 seconds!");
-        Location finalL = l;
-        Spy.cancelTrack();
-        PlayerInteractListener.cancelTrack();
-        new BukkitRunnable() {
-            int time = 0;
-            @Override
-            public void run() {
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.setCompassTarget(finalL);
-                }
-                if (time > 20*10) {
-                    cancel();
-                }
-                time ++;
-            }
-        }.runTaskTimer(HardcoreGames.getInstance(), 0L, 1L);
-
-
-        Block center = l.clone().add(0,16,0).getBlock();
-        center.setType(Material.GLOWSTONE);
-        l.clone().add(0,17,0).getBlock().setType(Material.CHEST);
-        Block block = l.clone().add(0,17,0).getBlock();
 
 
 
-        Chest chest = (Chest) block.getState();
-
-
-        Block northChest = center.getRelative(BlockFace.NORTH);
-        Block westChest = center.getRelative(BlockFace.WEST);
-        Block eastChest = center.getRelative(BlockFace.EAST);
-        Block southChest = center.getRelative(BlockFace.SOUTH);
-
-        northChest.setType(Material.CHEST);
-        westChest.setType(Material.CHEST);
-        eastChest.setType(Material.CHEST);
-        southChest.setType(Material.CHEST);
-
-        List<Block> orient = new ArrayList<>();
-        orient.add(northChest);
-        orient.add(westChest);
-        orient.add(eastChest);
-        orient.add(southChest);
-        for (Block b : orient) {
-            if (relativeToBlockandBlock(center,b) != null){
-
-                if (setBlock(b, Material.CHEST, relativeToBlockandBlock(center,b)) != null) {
-                    b.setBlockData(setBlock(b, Material.CHEST, relativeToBlockandBlock(center,b)));
-                    b.getState().update();
-                }
-
-
-            }
-        }
-
-
-        List<Chest> miniFeastChests = new ArrayList<>();
-
-        Chest north = (Chest) northChest.getState();
-        Chest west = (Chest) westChest.getState();
-        Chest east = (Chest) eastChest.getState();
-        Chest south = (Chest) southChest.getState();
-
-        miniFeastChests.add(chest);
-        miniFeastChests.add(north);
-        miniFeastChests.add(west);
-        miniFeastChests.add(east);
-        miniFeastChests.add(south);
-
-
-        for (Chest chests : miniFeastChests) {
-            fillChests(chests);
-        }
-
-
-
-
-
-    }
     public static BlockData setBlock(Block block, Material material, BlockFace blockFace) {
         block.setType(material);
         BlockData blockData = block.getBlockData();

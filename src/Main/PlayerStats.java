@@ -1,8 +1,6 @@
 package Main;
 
 import Kits.KitTools.Kits;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,6 +21,8 @@ public class PlayerStats {
     Map<UUID, Integer> totalKills = new HashMap<>();
     Map<UUID, Integer> gamesPlayed = new HashMap<>();
     Map<UUID, Map<Kits, Integer>> mostFrequentKit = new HashMap<>();
+
+    int currentGame = 0;
 
     private FileConfiguration customConfig;
     private File configFile;
@@ -100,8 +100,20 @@ public class PlayerStats {
        assignMapValuesFreq("Stats.FrequentlyUsed");
 
 
+        assignCurrentGame("Stats.CurrentGame");
 
         saveDefaultConfig();
+
+    }
+    public void assignCurrentGame (String path) {
+        int current = 0;
+        if (getCustomConfig().contains(path)) {
+            current = getCustomConfig().getInt(path);
+        } else {
+            getCustomConfig().createSection(path);
+
+        }
+        currentGame = current;
 
     }
 
@@ -168,7 +180,6 @@ public class PlayerStats {
             for (Map.Entry<String, Object> e : conf.getValues(false).entrySet()) {
                     ConfigurationSection keys = conf.getConfigurationSection(e.getKey());
                    // Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + "conf is null");
-                   // Bukkit.broadcastMessage(e.getValue().toString() + "value and next i skey " + e.getKey().toString());
                     //Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + keys.getValues(false).toString());
 
                     //Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + conf.get(e.getKey()).toString() + "this");
@@ -193,7 +204,6 @@ public class PlayerStats {
     @SuppressWarnings("unchecked")
     public static void expandMapIntoConfig(ConfigurationSection conf, Map<String, Object> map) {
         for (Map.Entry<String, Object> e : map.entrySet()) {
-            //Bukkit.broadcastMessage(e.getValue().toString() + "value and next i skey " + e.getKey().toString());
             if (e.getValue() instanceof Map<?,?>) {
                 ConfigurationSection section = conf.createSection(e.getKey());
 
@@ -212,6 +222,19 @@ public class PlayerStats {
             }
         }
     }
+
+    public void saveCurrentGame (String path, int i) {
+        if (getCustomConfig().contains(path)) {
+
+            getCustomConfig().set(path, currentGame);
+
+        } else {
+
+            getCustomConfig().createSection(path);
+
+        }
+    }
+
     public void saveFrequentMapToYAML (String path, Map<UUID, Map<Kits, Integer>> map) {
         Map<String, Object> converted = new HashMap<>();
         Map<Kits,Integer> defaultMap = new HashMap<>();
@@ -220,7 +243,6 @@ public class PlayerStats {
         }
 
         if (getCustomConfig().contains(path)) {
-            //Bukkit.broadcastMessage(converted.toString() + "my map");
             expandMapIntoConfig(getCustomConfig().getConfigurationSection(path), converted);
             //getCustomConfig().set(path, converted);
         } else {
@@ -349,6 +371,19 @@ public class PlayerStats {
 
         saveMapToYAML("Stats.Wins", totalWins);
 
+
+        saveStats();
+    }
+
+
+    public int getCurrentGame () {
+        return currentGame;
+    }
+
+    public void addCurrentGame () {
+        currentGame++;
+
+        saveCurrentGame("Stats.CurrentGame", currentGame);
 
         saveStats();
     }

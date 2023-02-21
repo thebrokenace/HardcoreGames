@@ -27,6 +27,7 @@ public class TeleportUtil {
         //Generate Random Location
         Random random = new Random(System.currentTimeMillis());
 
+
         int x = 0;
         int z = 0;
         int y = 0;
@@ -53,7 +54,7 @@ public class TeleportUtil {
     public static Location findSafeLocation(Entity player, boolean hermit){
         int radius = 60;
         Location randomLocation = generateLocation(player, hermit, radius);
-        int maxAttempts = 200000;
+        int maxAttempts = 5000;
         int attempts = 0;
         while (attempts < maxAttempts){
             if (attempts > 2000) {

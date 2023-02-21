@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 import java.io.IOException;
@@ -158,7 +157,6 @@ public class Game {
                     if (!p.hasPermission("hungergames.bypass") && !p.isOp() && !p.getGameMode().equals(GameMode.SPECTATOR)) {
                         if (!_game.losers.contains(p.getUniqueId())) {
 
-                            //Bukkit.broadcastMessage(p.getDisplayName() + " is valid plyer");
 
                             validPlayers.add(p.getUniqueId());
                         }
@@ -263,7 +261,6 @@ public class Game {
         for (Player p : Bukkit.getOnlinePlayers()) {
 
             for (Team t : p.getScoreboard().getTeams()) {
-               // Bukkit.broadcastMessage(t.getName());
 
                 t.removeEntry(p.getName());
             }
@@ -302,7 +299,7 @@ public class Game {
         if (world != null) {
             world.getWorldBorder().setSize(5000);
             //world.getWorldBorder().setCenter(world.getSpawnLocation());
-            world.setDifficulty(Difficulty.HARD);
+            world.setDifficulty(Difficulty.NORMAL);
             world.setTime(0);
             world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
             world.setGameRule(GameRule.DO_INSOMNIA, false);
@@ -334,8 +331,6 @@ public class Game {
         PregenerateRandomLocation.get_pregen().clearMap();
 
         for (Furnace furance : HardcoreGames.getInstance().getFurnaceManager().getAllFurnaces()) {
-//            Bukkit.broadcastMessage(furance.toString() + ChatColor.GREEN + "FURNACE");
-//            Bukkit.getConsoleSender().sendMessage(furance.toString() + ChatColor.GREEN + "FRUACNe");
             furance.setFuel(new ItemStack(Material.AIR));
             furance.setInput(new ItemStack(Material.AIR));
             HardcoreGames.getInstance().getFurnaceManager().removeFurnaceFromConfig(furance,true);

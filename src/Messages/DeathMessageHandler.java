@@ -4,7 +4,6 @@ import Kits.KitTools.KitInfo;
 import Main.PlayerStats;
 import Util.Game;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +32,6 @@ public class DeathMessageHandler implements Listener {
 
 
                 } else {
-                    //Bukkit.broadcastMessage("player was not killed by other killer");
                     messages.sendToAll(messages.changeDefault(e.getEntity().getLastDamageCause().getCause(), e.getEntity()));
                     Bukkit.broadcastMessage(messages.peopleLeftMessage());
 

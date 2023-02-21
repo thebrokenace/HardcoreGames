@@ -136,11 +136,6 @@ public class RobotTrait extends Trait {
 
     public void equipBestWeapon () {
         //equips only the best item it has in inventory
-        //Bukkit.broadcastMessage(mostDamageItem(Robot.getSharedRobots().robotDrops.get(npc)) + "");
-        //Bukkit.broadcastMessage(ChatColor.DARK_RED + mostDamageItem(npcInventory()).getType().name() + " most damage + " + npcEquipment().get(Equipment.EquipmentSlot.HAND).getType().name());
-        // Bukkit.broadcastMessage(npc.getName() + ChatColor.GOLD + " inv equip weapon" + npcInventory().toString());
-       // Bukkit.broadcastMessage(npc.getName() + ChatColor.GOLD + "most damage item in inventory: " + mostDamageItem(npcInventory(npc)).getType().toString());
-      //  Bukkit.broadcastMessage(npc.getName()  + ChatColor.RED + "item in hand" + npcEquipment(npc).get(Equipment.EquipmentSlot.HAND).getType());
         ItemStack hand = new ItemStack(Material.AIR);
         if (npc.getOrAddTrait(Equipment.class).get(Equipment.EquipmentSlot.HAND) != null) {
             hand = npc.getOrAddTrait(Equipment.class).get(Equipment.EquipmentSlot.HAND).clone();
@@ -162,11 +157,8 @@ public class RobotTrait extends Trait {
 
             for (int i = 1; i < currentInv.length+1; i++) {
                 ItemStack pickup = currentInv[i];
-//                Bukkit.broadcastMessage(String.valueOf(pickup));
-//                Bukkit.broadcastMessage(i+"slot");
                 if (pickup == null) {
 
-                    //Bukkit.broadcastMessage(ChatColor.DARK_PURPLE + npc.getName() + hand.getType());
 
 
                     currentInv[i] = hand;
@@ -181,19 +173,15 @@ public class RobotTrait extends Trait {
         }
 
 //        if (mostDamageItem(npcInventory(npc)).getType() != npcEquipment(npc).get(Equipment.EquipmentSlot.HAND).getType()) {
-//            Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + npc.getName() + " this npc's item in hand is not the most damage");
 //            ItemStack item = mostDamageItem(npcInventory(npc));
 //            if (npcEquipment(npc).get(Equipment.EquipmentSlot.HAND) == null) {
-//                Bukkit.broadcastMessage(npc.getName() + " hand slot is null");
 //                npcEquipment(npc).set(Equipment.EquipmentSlot.HAND, item);
 //            } else {
-//                Bukkit.broadcastMessage(npc.getName() + " hand slot is not null");
 //                ItemStack stack = npc.getOrAddTrait(Equipment.class).get(Equipment.EquipmentSlot.HAND);
 //                ItemStack[] currentInv = npc.getOrAddTrait(Inventory.class).getContents();
 //                for (int i = 0; i < currentInv.length; i++) {
 //                    ItemStack j = currentInv[i];
 //                    if (j == null) {
-//                        Bukkit.broadcastMessage(ChatColor.AQUA + "found null inv space in " + npc.getName() + "inv. placing" + stack.getType() + " in this slot");
 //                        currentInv[i] = stack;
 //                        npcEquipment(npc).set(Equipment.EquipmentSlot.HAND, item);
 //                        npc.getOrAddTrait(Inventory.class).setContents(currentInv);
@@ -301,7 +289,6 @@ public class RobotTrait extends Trait {
                         if (item.getItemStack().getType().name().toLowerCase().contains(s)) {
                             npc.removeTrait(Waypoints.class);
                             npc.getNavigator().setTarget(item.getLocation());
-                            //Bukkit.broadcastMessage("npc running towards good item");
                             break;
                         }
                     }
@@ -336,17 +323,14 @@ public class RobotTrait extends Trait {
             }
         }
 
-        //Bukkit.broadcastMessage(npc.getName() + ChatColor.GOLD + "Currnet inv" + npcInventory().toString());
 
 
         Robot.getSharedRobots().setRobotDrops(npc);
-       // Bukkit.broadcastMessage(npc.getName() + ChatColor.GOLD + " inv after" + npcInventory().toString());
 
     }
     public void equipBestArmor() {
         for (Equipment.EquipmentSlot eq : Equipment.EquipmentSlot.values()) {
             if (eq != Equipment.EquipmentSlot.HAND && eq != Equipment.EquipmentSlot.OFF_HAND) {
-                //Bukkit.broadcastMessage(bestArmor(npcInventory(npc), eq).toString() + ChatColor.GOLD + "best armor");
                 //check for best armor in this equipmentslot
                 ItemStack bestArmor = bestArmor(npcInventory(npc), eq);
 
@@ -371,7 +355,6 @@ public class RobotTrait extends Trait {
 
                     for (int i = 0; i < currentInv.length; i++) {
                         if (currentInv[i] == bestArmor) {
-                           // Bukkit.broadcastMessage("found best armor in inv, deleted it");
                             currentInv[i] = null;
                             npc.getOrAddTrait(Inventory.class).setContents(currentInv);
                             break;
@@ -380,33 +363,28 @@ public class RobotTrait extends Trait {
                     }
 
                     if (bestArmor.getType() != Material.AIR) {
-                        //Bukkit.broadcastMessage(eq.toString() + " this slot gets this armor " + bestArmor(npcInventory(npc), eq).getType().name());
                         if ((bestArmor.getType().name().toLowerCase().contains("diamond"))) {
 
                             npcEquipment(npc).set(eq, stack);
 
                             Sounds.playSound(npc.getEntity().getLocation(), Sound.ITEM_ARMOR_EQUIP_DIAMOND);
-                           // Bukkit.broadcastMessage(ChatColor.GOLD + "WEARING dia");
                             //npc.getOrAddTrait(Inventory.class).setContents((ItemStack[]) ArrayUtils.removeElement(npc.getOrAddTrait(Inventory.class).getContents(), bestArmor(Arrays.asList(npc.getOrAddTrait(Inventory.class).getContents()), eq)));
                         }
                         if (bestArmor.getType().name().toLowerCase().contains("iron")) {
                             npcEquipment(npc).set(eq, bestArmor);
                             Sounds.playSound(npc.getEntity().getLocation(), Sound.ITEM_ARMOR_EQUIP_IRON);
                             //npc.getOrAddTrait(Inventory.class).setContents((ItemStack[]) ArrayUtils.removeElement(npc.getOrAddTrait(Inventory.class).getContents(), bestArmor(Arrays.asList(npc.getOrAddTrait(Inventory.class).getContents()), eq)));
-                           // Bukkit.broadcastMessage(ChatColor.GOLD + "WEARING iren");
 
 
                         }
                         if (bestArmor.getType().name().toLowerCase().contains("leather")) {
                             npcEquipment(npc).set(eq, bestArmor);
                             Sounds.playSound(npc.getEntity().getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER);
-                            //Bukkit.broadcastMessage(ChatColor.GOLD + "WEARING leath");
 
                             //npc.getOrAddTrait(Inventory.class).setContents((ItemStack[]) ArrayUtils.removeElement(npc.getOrAddTrait(Inventory.class).getContents(), bestArmor(Arrays.asList(npc.getOrAddTrait(Inventory.class).getContents()), eq)));
                         }
                         if (bestArmor.getType().name().toLowerCase().contains("turtle")) {
                             npcEquipment(npc).set(eq, bestArmor);
-                            //Bukkit.broadcastMessage(ChatColor.GOLD + "WEARING TUTRTLE");
                             Sounds.playSound(npc.getEntity().getLocation(), Sound.ITEM_ARMOR_EQUIP_TURTLE);
                         }
                     }
@@ -695,7 +673,6 @@ public class RobotTrait extends Trait {
             for (NPC npc : robot.activeRobots()) {
                 if (npc.isSpawned()) {
                     Location npcLocation = npc.getEntity().getLocation();
-                    //Bukkit.broadcastMessage("checking" + npc.getName());
                     if (!game.getWorld().getWorldBorder().isInside(npcLocation)) {
 
                         npc.getNavigator().cancelNavigation();
@@ -703,11 +680,9 @@ public class RobotTrait extends Trait {
                     }
 
                     if (npcLocationHashMap.containsKey(npc)) {
-                        //Bukkit.broadcastMessage(ChatColor.GOLD + npc.getName() + "distance from old spot" + npcLocationHashMap.get(npc).distance(npcLocation) + "");
 
                         if (npcLocationHashMap.get(npc).distance(npcLocation) < 1) {
                             //npc has not moved for 5 seconds
-                            //Bukkit.broadcastMessage("npc not moved for 10 seconds");
 
                             //force npc to move to random  nearby location
                             //remove targets temporarily
@@ -719,7 +694,6 @@ public class RobotTrait extends Trait {
                             ///npc.getNavigator().setTarget(findSafeLocation(npc.getEntity()));
 
                             //npc.getNavigator().get
-                            //Bukkit.broadcastMessage(npc.getName() +"npc no longer moving. cleared targets and path, now moving towards" + npc.getNavigator().getTargetAsLocation().toString());
                             npc.getOrAddTrait(Waypoints.class).setWaypointProvider("wander");
 
 

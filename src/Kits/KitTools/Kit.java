@@ -1,5 +1,6 @@
 package Kits.KitTools;
 
+import Kits.KitListeners.Kits.Vanity.Vulture;
 import Util.SkullCreator;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -171,6 +172,32 @@ public class Kit {
 
         if (kits == Kits.LAUNCHER) {
             kitDrops.add(itemStackMaker(Material.SPONGE, "&6&lLaunchpad", null, 0, 15));
+        }
+
+        if (kits == Kits.PORTAL) {
+            kitDrops.add(glowItem(itemStackMaker(Material.PURPLE_WOOL, "&5&lPortal Block", null, 0, 2)));
+        }
+        if (kits == Kits.VULTURE) {
+            kitDrops.add(Vulture.pickerCompass());
+            kitDrops.add(Vulture.deathLog());
+        }
+        if (kits == Kits.PLAGUE) {
+            kitDrops.add(itemStackMaker(Material.GREEN_DYE, "&2&lInfect Syringe", null, 0, 20));
+            kitDrops.add(itemStackMaker(Material.ARROW, "&2&lInfection Arrows", null, 0, 5));
+
+            ItemStack infectBow = new ItemStack(Material.BOW);
+            infectBow.setDurability((short) ((short) Material.BOW.getMaxDurability() - 5));
+            kitDrops.add(infectBow);
+
+        }
+        if (kits == Kits.IMPOSTER) {
+            //kitDrops.add(Imposter.disguiseKit());
+        }
+
+        if (kits == Kits.BRIDGER) {
+            kitDrops.add(itemStackMaker(Material.EGG, "&1&bBridge Egg",null,0,25));
+            kitDrops.add(itemStackMaker(Material.EGG, "&1&bSuper Bridge Egg",null,0,5));
+
         }
 
         return kitDrops;

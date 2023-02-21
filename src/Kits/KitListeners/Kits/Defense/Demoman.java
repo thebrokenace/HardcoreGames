@@ -59,12 +59,10 @@ public class Demoman implements Listener {
                 Player p = (Player) e.getEntity();
                 if (kitInfo.getPlayerKit(p) == Kits.DEMOMAN) {
                     if (e.getCause().equals(EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)) {
-//                        Bukkit.broadcastMessage("demoman block explosion damage");
-                        //Bukkit.broadcastMessage(e.getDamage() + "dmg" + e.getDamage()*0.5);
+
                         e.setDamage(0.5*e.getDamage());
                     }
                     if (e.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
-                        //Bukkit.broadcastMessage("demoman entity explosion damage");
 
                         e.setDamage(0.5*e.getDamage());
                     }

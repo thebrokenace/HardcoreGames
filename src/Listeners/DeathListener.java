@@ -33,28 +33,23 @@ public class DeathListener implements Listener {
                 if (e.getEntity().getGameMode() != GameMode.SURVIVAL) {
                     return;
                 }
-                //Bukkit.broadcastMessage("p kille");
 
                 Player p = e.getEntity();
                 if (p.getKiller() != null) {
 
                     game.addKill(p.getKiller().getUniqueId());
-                    //Bukkit.broadcastMessage(game.getKills(p.getKiller().getUniqueId()) + "");
                 }
                 game.addLoser(p.getUniqueId());
 
 
 
-//                Bukkit.broadcastMessage(game.currentPlayersLeft() + "currentplayers left "+ game.currentPlayerList().size() + "size of list");
 //                for (UUID uuid : game.currentPlayerList()) {
-//                    Bukkit.broadcastMessage(ChatColor.YELLOW + Bukkit.getPlayer(uuid).getName());
 //                }
 
 
                 if (game.currentPlayersLeft() == 1 && game.currentPlayerList().size() == 1) {
 
                     if (game.setValidWinner()) {
-                        //Bukkit.broadcastMessage(ChatColor.AQUA + "Congratulations " + game.getWinner().getName() + " for winning!!");
                         Bukkit.getScheduler().runTask(HardcoreGames.getInstance(), new Runnable() {
                             @Override
                             public void run() {

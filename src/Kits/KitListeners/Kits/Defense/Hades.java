@@ -1,20 +1,13 @@
 package Kits.KitListeners.Kits.Defense;
 
-import Kits.KitListeners.KitUtils.PathfinderGoalFollowPlayer;
 import Kits.KitTools.KitInfo;
 import Kits.KitTools.Kits;
 import Main.HardcoreGames;
 import Util.Game;
 import Util.Sounds;
-import net.minecraft.server.v1_16_R3.*;
-import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -168,29 +161,29 @@ public class Hades implements Listener {
 
     }
     public static void makePet(LivingEntity entity, Player owner) {
-        EntityLiving entityLiving = ((CraftLivingEntity)entity).getHandle();
-        if (entityLiving instanceof EntityInsentient) {
-            EntityPlayer entityPlayer = ((CraftPlayer)owner).getHandle();
-            EntityInsentient entityInsentient = (EntityInsentient)entityLiving;
-            EntityCreature entityCreature = (EntityCreature) entityLiving;
-            entityInsentient.goalSelector = new PathfinderGoalSelector(entityInsentient.world.getMethodProfilerSupplier());
-            entityInsentient.targetSelector = new PathfinderGoalSelector(entityInsentient.world.getMethodProfilerSupplier());
-            entityInsentient.goalSelector.a(0, new PathfinderGoalFloat(entityInsentient));
-            entityInsentient.goalSelector.a(1, new PathfinderGoalFollowPlayer(entityInsentient, entityPlayer, 1.5D, 10.0F));
-            entityInsentient.goalSelector.a(8, new PathfinderGoalLookAtPlayer(entityInsentient, EntityPlayer.class, 8.0F));
-            entityInsentient.getAttributeMap().b().add(new AttributeModifiable(GenericAttributes.ATTACK_DAMAGE, (a) -> {a.setValue(1.0);}));
-            entityInsentient.getAttributeMap().b().add(new AttributeModifiable(GenericAttributes.FOLLOW_RANGE, (a) -> {a.setValue(1.0);}));
-            // Adds attack goal to pig
-            entityCreature.goalSelector.a(0, new PathfinderGoalMeleeAttack(entityCreature, 1.0D, false));
-            entityInsentient.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(entityInsentient, EntityPlayer.class, true));
-            entityCreature.goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(entityCreature, 1.0));
-
-            entityCreature.goalSelector.a(7, new PathfinderGoalRandomStrollLand(entityCreature, 1.0));
-
-
-        } else {
-            throw new IllegalArgumentException(entityLiving.getClass().getSimpleName() + " is not an instance of an EntityInsentient.");
-        }
+//        EntityLiving entityLiving = ((CraftLivingEntity)entity).getHandle();
+//        if (entityLiving instanceof EntityInsentient) {
+//            EntityPlayer entityPlayer = ((CraftPlayer)owner).getHandle();
+//            EntityInsentient entityInsentient = (EntityInsentient)entityLiving;
+//            EntityCreature entityCreature = (EntityCreature) entityLiving;
+//            entityInsentient.goalSelector = new PathfinderGoalSelector(entityInsentient.world.getMethodProfilerSupplier());
+//            entityInsentient.targetSelector = new PathfinderGoalSelector(entityInsentient.world.getMethodProfilerSupplier());
+//            entityInsentient.goalSelector.a(0, new PathfinderGoalFloat(entityInsentient));
+//            entityInsentient.goalSelector.a(1, new PathfinderGoalFollowPlayer(entityInsentient, entityPlayer, 1.5D, 10.0F));
+//            entityInsentient.goalSelector.a(8, new PathfinderGoalLookAtPlayer(entityInsentient, EntityPlayer.class, 8.0F));
+//            entityInsentient.getAttributeMap().b().add(new AttributeModifiable(GenericAttributes.ATTACK_DAMAGE, (a) -> {a.setValue(1.0);}));
+//            entityInsentient.getAttributeMap().b().add(new AttributeModifiable(GenericAttributes.FOLLOW_RANGE, (a) -> {a.setValue(1.0);}));
+//            // Adds attack goal to pig
+//            entityCreature.goalSelector.a(0, new PathfinderGoalMeleeAttack(entityCreature, 1.0D, false));
+//            entityInsentient.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget<>(entityInsentient, EntityPlayer.class, true));
+//            entityCreature.goalSelector.a(5, new PathfinderGoalMoveTowardsRestriction(entityCreature, 1.0));
+//
+//            entityCreature.goalSelector.a(7, new PathfinderGoalRandomStrollLand(entityCreature, 1.0));
+//
+//
+//        } else {
+//            throw new IllegalArgumentException(entityLiving.getClass().getSimpleName() + " is not an instance of an EntityInsentient.");
+//        }
     }
 
     public ItemStack playerHead (Player hades) {

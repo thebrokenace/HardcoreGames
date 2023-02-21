@@ -53,10 +53,8 @@ public class Lumberjack implements Listener {
             Damageable itemdmg = (Damageable) im;
             itemdmg.setDamage(itemdmg.getDamage() - damage);
             is.setItemMeta((ItemMeta) itemdmg);
-//            Bukkit.broadcastMessage(itemdmg.getDamage() + "");
-//            Bukkit.broadcastMessage(is.getType().getMaxDurability() + "");
+
             if (itemdmg.getDamage() >= is.getType().getMaxDurability()) {
-                //Bukkit.broadcastMessage(ChatColor.RED+  "BREAK ITME!");
                 p.playSound(p.getLocation(), Sound.ENTITY_ITEM_BREAK, 10, 1);
                 p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
             }

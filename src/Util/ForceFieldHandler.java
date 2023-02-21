@@ -2,11 +2,9 @@ package Util;
 
 import Feast.MainFeast;
 import Feast.MiniFeast;
-import Kits.KitTools.KitInfo;
 import Main.Config;
 import Main.HardcoreGames;
 import Robots.Robot;
-import net.citizensnpcs.npc.ai.speech.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -39,6 +37,8 @@ public class ForceFieldHandler {
 
 
             int timesBorderShrunk = 0;
+            double currentChangingSize = 5000;
+            int heldtime = 0;
             @Override
             public void run() {
 
@@ -53,137 +53,156 @@ public class ForceFieldHandler {
                     }
                 }
 
+
+                //before actually shrinking, make sure size is completed
+
                 if (randomTimeInMinutes == minutes) {
-                    //Bukkit.broadcastMessage(ChatColor.GOLD  + "randominute"  + randomTimeInMinutes);
-                    double newSize = (game.getWorld().getWorldBorder().getSize() * 0.60);
+                    //minutes is time/60
+                    //
+                    if (Math.abs(currentChangingSize - game.getWorld().getWorldBorder().getSize()) <= 5) {
 
-                    Bukkit.broadcastMessage(ChatColor.RED + "The Border is now shrinking to " + Math.round(newSize) + " blocks in width!");
-                    for (Player p : Bukkit.getOnlinePlayers()) {
-                        List<Player> safe = new ArrayList<>();
-                        for (Entity pl : game.getWorld().getNearbyEntities(game.getWorld().getSpawnLocation(), newSize/2, newSize/2, newSize/2)) {
-                            if (pl instanceof Player) {
-                                safe.add((Player) pl);
+
+                        double newSize = (game.getWorld().getWorldBorder().getSize() * 0.60);
+
+                        currentChangingSize = newSize;
+                        heldtime = time;
+
+
+
+                        Bukkit.broadcastMessage(ChatColor.RED + "The Border is now shrinking to " + Math.round(newSize) + " blocks in width!");
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            List<Player> safe = new ArrayList<>();
+                            for (Entity pl : game.getWorld().getNearbyEntities(game.getWorld().getSpawnLocation(), newSize / 2, newSize / 2, newSize / 2)) {
+                                if (pl instanceof Player) {
+                                    safe.add((Player) pl);
+                                }
+                            }
+                            if (!safe.contains(p)) {
+                                p.sendMessage(ChatColor.DARK_RED + "WARNING! You are currently in the danger zone for the Border!");
                             }
                         }
-                        if (!safe.contains(p)) {
-                            p.sendMessage(ChatColor.DARK_RED + "WARNING! You are currently in the danger zone for the Border!");
-                        }
-                    }
-                    timesBorderShrunk++;
+                        timesBorderShrunk++;
 
-                    //game.getWorld().getWorldBorder().setWarningTime(10);
-                    //algorithm for border close  / time takes:
-                    //1000 blocks walked = 294 seconds
-                    //3.4 blocks a second
-                    //seconds for border close = blocks shrunk  / 3.4
+                        //game.getWorld().getWorldBorder().setWarningTime(10);
+                        //algorithm for border close  / time takes:
+                        //1000 blocks walked = 294 seconds
+                        //3.4 blocks a second
+                        //seconds for border close = blocks shrunk  / 3.4
 
-                    //first iteration:
-                    //5000 radius -> 3000 radius
-                    //takes 882 seconds to complete
-                    //second iteration:
-                    //3000 radius -> ~1800 radius
-                    //takes 529 seconds to complete
-                    //third iteration:
-                    //1800 -> ~1080 radius
-                    //takes ~317 seconds to complete
-                    //fourth iteration:
-                    //1080 -> 648 radius
-                    //takes 190 seconds to complete
-                    //fifth
-                    //648 -> 388 radius
-                    //takes 113 seconds to complete
-                    //on 6th iteration switch to flat rate model
-                    //388 -> 100 radius
-                    //30 seconds
-                    //100 -> 30
-                    randomTimeInMinutes = (rand.nextInt(maxBound - minBound) + minBound) + minutes;
+                        //first iteration:
+                        //5000 radius -> 3000 radius
+                        //takes 882 seconds to complete
+                        //second iteration:
+                        //3000 radius -> ~1800 radius
+                        //takes 529 seconds to complete
+                        //third iteration:
+                        //1800 -> ~1080 radius
+                        //takes ~317 seconds to complete
+                        //fourth iteration:
+                        //1080 -> 648 radius
+                        //takes 190 seconds to complete
+                        //fifth
+                        //648 -> 388 radius
+                        //takes 113 seconds to complete
+                        //on 6th iteration switch to flat rate model
+                        //388 -> 100 radius
+                        //30 seconds
+                        //100 -> 30
+                        randomTimeInMinutes = (rand.nextInt(maxBound - minBound) + minBound) + minutes;
 
 
-                    if (5 >= timesBorderShrunk) {
-                        game.getWorld().getWorldBorder().setSize(newSize, timeBorderClose((int) newSize));
+                        if (5 >= timesBorderShrunk) {
+                            game.getWorld().getWorldBorder().setSize(newSize, timeBorderClose((int) newSize));
 
-                        if (timesBorderShrunk == 2) {
-                            Random rand = new Random();
-                            int minifeastbound = 2;
-                            int minifeast = rand.nextInt(minifeastbound);
-                            if (minifeast == 1) {
-                                MiniFeast.spawnFeast(game.getWorld(), newSize);
+                            if (timesBorderShrunk == 2) {
+                                Random rand = new Random();
+                                int minifeastbound = 2;
+                                int minifeast = rand.nextInt(minifeastbound);
+                                if (minifeast == 1) {
+                                    MiniFeast.spawnFeast(game.getWorld(), newSize/2);
 
+                                }
                             }
-                        }
 
-                        if (timesBorderShrunk == 3) {
-                            Random rand = new Random();
-                            int minifeastbound = 2;
-                            int minifeast = rand.nextInt(minifeastbound);
-                            if (minifeast == 1) {
-                                MiniFeast.spawnFeast(game.getWorld(), newSize);
+                            if (timesBorderShrunk == 3) {
+                                Random rand = new Random();
+                                int minifeastbound = 2;
+                                int minifeast = rand.nextInt(minifeastbound);
+                                if (minifeast == 1) {
+                                    MiniFeast.spawnFeast(game.getWorld(), newSize/2);
 
+                                }
                             }
-                        }
 
-                        if (timesBorderShrunk == 4) {
-                            Random rand = new Random();
-                            int minifeastbound = 2;
-                            int minifeast = rand.nextInt(minifeastbound);
-                            if (minifeast == 1) {
-                                MiniFeast.spawnFeast(game.getWorld(), newSize);
+                            if (timesBorderShrunk == 4) {
+                                Random rand = new Random();
+                                int minifeastbound = 2;
+                                int minifeast = rand.nextInt(minifeastbound);
+                                if (minifeast == 1) {
+                                    MiniFeast.spawnFeast(game.getWorld(), newSize/2);
+
+                                }
 
                             }
 
-                        }
+                            if (timesBorderShrunk == 5) {
+                                Random rand = new Random();
+                                int minifeastbound = 2;
+                                int minifeast = rand.nextInt(minifeastbound);
+                                if (minifeast == 1) {
+                                    MiniFeast.spawnFeast(game.getWorld(), newSize/2);
 
-                        if (timesBorderShrunk == 5) {
-                            Random rand = new Random();
-                            int minifeastbound = 2;
-                            int minifeast = rand.nextInt(minifeastbound);
-                            if (minifeast == 1) {
-                                MiniFeast.spawnFeast(game.getWorld(), newSize);
-
+                                }
                             }
                         }
-                    }
-
-
 
 
 //time = 0;
-                            if (timesBorderShrunk == 6) {
-                                MainFeast.spawnFeast(game.getWorld(), 100);
+                        if (timesBorderShrunk == 6) {
+                            currentChangingSize = 100;
 
-                                game.getWorld().getWorldBorder().setSize(100, timeBorderClose((int) 200));
+                            MainFeast.spawnFeast(game.getWorld(), 100);
+
+                            game.getWorld().getWorldBorder().setSize(100, timeBorderClose((int) 200));
 
 
-                            }
-                            if (timesBorderShrunk == 7) {
-                                game.getWorld().getWorldBorder().setSize(30, timeBorderClose((int) 30));
+                        }
+                        if (timesBorderShrunk == 7) {
+                            currentChangingSize = 30;
 
-                            }
-                            if (timesBorderShrunk == 8) {
-                                game.getWorld().getWorldBorder().setSize(10, timeBorderClose(10));
-                            }
-                            if (timesBorderShrunk == 9) {
-                                game.getWorld().getWorldBorder().setSize(2, timeBorderClose(2));
-                                Bukkit.broadcastMessage(ChatColor.RED + "SUDDEN DEATH WILL BEGIN SOON!");
+                            game.getWorld().getWorldBorder().setSize(30, timeBorderClose((int) 30));
 
-                            }
-                            if (timesBorderShrunk == 10) {
-                                Bukkit.broadcastMessage(ChatColor.RED + "SUDDEN DEATH HAS STARTED!");
+                        }
+                        if (timesBorderShrunk == 8) {
+                            currentChangingSize = 10;
 
-                                List<Player> players =  new ArrayList<>(Bukkit.getOnlinePlayers());
+                            game.getWorld().getWorldBorder().setSize(10, timeBorderClose(10));
+                        }
+                        if (timesBorderShrunk == 9) {
+                            currentChangingSize = 2;
 
-                                suddenDeath(players);
-                            }
+                            game.getWorld().getWorldBorder().setSize(2, timeBorderClose(2));
+                            Bukkit.broadcastMessage(ChatColor.RED + "SUDDEN DEATH WILL BEGIN SOON!");
+
+                        }
+                        if (timesBorderShrunk == 10) {
+                            Bukkit.broadcastMessage(ChatColor.RED + "SUDDEN DEATH HAS STARTED!");
+
+                            List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+
+                            suddenDeath(players);
+                        }
+                    } else {
+                        time = heldtime;
                     }
+                }
 
 
 
 
-                //Bukkit.broadcastMessage(game.currentPlayersLeft() + "");
                 if (game.getPhase() == GamePhase.WINNERDECIDED) {
                     cancel();
                 }
-                //Bukkit.broadcastMessage(game.humansLeft().size() + " huamns left");
                 //check if only players left
                 if (game.validPlayersOnline().size() < 1 && Robot.getSharedRobots().activeRobots().size() >= 1) { //npe
                     //robots on, no humans
@@ -260,6 +279,6 @@ public class ForceFieldHandler {
         }
     }
     public static int timeBorderClose (int size) {
-        return (int) (size/5.4);
+        return (int) (size/config.getForcefieldSpeed());
     }
 }

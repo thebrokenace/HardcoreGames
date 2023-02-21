@@ -36,13 +36,13 @@ public class Phantom implements Listener {
                     if (e.getHand() == EquipmentSlot.HAND && e.getItem() != null && e.getItem().getType() == Material.FEATHER && e.getItem().getItemMeta() != null && ChatColor.stripColor(e.getItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Phantom Flight")) {
                         Player p = e.getPlayer();
                         if (cooldownMap.containsKey(p.getUniqueId())) {
-                            if (System.currentTimeMillis() - cooldownMap.get(p.getUniqueId()) >= 120000) {
+                            if (System.currentTimeMillis() - cooldownMap.get(p.getUniqueId()) >= 90000) {
                                 cooldownMap.put(p.getUniqueId(), System.currentTimeMillis());
                                 flight(e.getPlayer(), e.getItem());
 
 
                             } else {
-                                p.sendMessage(ChatColor.RED + "You must wait " + (120 - Math.round((System.currentTimeMillis() - ((cooldownMap.get(p.getUniqueId()))))/1000f)) + " seconds to use this again!");
+                                p.sendMessage(ChatColor.RED + "You must wait " + (90 - Math.round((System.currentTimeMillis() - ((cooldownMap.get(p.getUniqueId()))))/1000f)) + " seconds to use this again!");
                             }
                         } else {
                             cooldownMap.put(p.getUniqueId(), System.currentTimeMillis());

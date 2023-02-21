@@ -21,7 +21,7 @@ public class Tank implements Listener {
                 if (kitInfo.getPlayerKit(killer) == Kits.TANK) {
                     if (e.getEntity().getLocation().getWorld() != null)
 
-                    e.getEntity().getLocation().getWorld().createExplosion(e.getEntity().getLocation(), 5, false);
+                    e.getEntity().getLocation().getWorld().createExplosion(e.getEntity().getLocation(), 8, true);
 
                 }
             }

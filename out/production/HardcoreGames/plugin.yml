@@ -6,6 +6,8 @@ depend:
   - LuckPerms
   - Citizens
   - Sentinel
+  - ProtocolLib
+  - SkinsRestorer
 commands:
   hardcoregames:
     aliases: hg

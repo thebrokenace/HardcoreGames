@@ -3,19 +3,13 @@ package Kits.KitListeners.KitUtils;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import net.minecraft.server.v1_16_R3.*;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.minecraft.server.v1_16_R3.ChatBaseComponent;
+import net.minecraft.server.v1_16_R3.IScoreboardCriteria;
+import net.minecraft.server.v1_16_R3.Scoreboard;
+import net.minecraft.server.v1_16_R3.ScoreboardObjective;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.UUID;
 
 public class BelowName {
