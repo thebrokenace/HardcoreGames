@@ -41,4 +41,5 @@ This repository contains an advanced Java implementation of the legendary Hunger
 ### Installation  
 1. Clone the repository:  
    ```bash  
-   git clone [https://github.com/yourusername/mc-hg-gamemode.git  ](https://github.com/thebrokenace/HardcoreGames.git)
+   git clone https://github.com/thebrokenace/HardcoreGames.git
+   ```
